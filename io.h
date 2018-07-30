@@ -1,10 +1,13 @@
 /******************************************************
- |					Team TRF						  |
- | 													  |
- | 			Created: 20-Aug-17 12:42:33 AM            |
- |  			Author: Varun Gujarathi				  |
- |													  |
-*******************************************************/
+ |			 #########   #########	 #########
+ |					 #       #       #   #
+ | 					 #       #       #   #
+ |					 #       #########	 ######
+ |					 #       #  #        #
+ |					 #       #     #     #
+ |				 	 #       #       #   #
+ | 			Created: 20-Aug-17 12:42:33 AM
+ *******************************************************/
 // ATMEL ATMEGA16
 //
 //                 ______
@@ -32,10 +35,8 @@
 
 /*************************************/
 
-
-#include <avr/io.h>
 #ifndef F_CPU
-#define F_CPU 8000000UL
+#define F_CPU 16000000UL
 #endif
 #include <util/delay.h>
 #include <avr/interrupt.h>
@@ -43,10 +44,6 @@
 #include <avr/pgmspace.h>
 #include <math.h>
 #include <stdlib.h>
-#include <avr/sfr_defs.h>
-
-#define cbi(port,bit) \
-	(port) &= ~(1 << (bit))
 
 void pinMode(uint8_t,uint8_t,uint8_t);	//register declaration	eg:(i/o register name, i/o bit of register/nibble/all bits, OUPUT/LOW)
 void digitalWrite(uint8_t,uint8_t,uint8_t);	//setting bit high or low eg:(i/o register name, i/o bit of register/nibble/all bits, HIGH/LOW)
@@ -506,30 +503,30 @@ class Serial{
 	public:
 	void begin(unsigned int bAud)
 	{
-		int uBrr=F_CPU/(16UL*bAud)-1;
+		int uBrr=((F_CPU)/(bAud*16)-1);
 		//Set baud rate
-		UBRRH=(uBrr>>8);
-		UBRRL=uBrr;
-		UCSRB|=(1<<TXEN)|(1<<RXEN);             //enable receiver and transmitter
-    UCSRC|=(1<<URSEL);
-		UCSRC|=(1<<UCSZ0)|(1<<UCSZ1);// 8bit data format
-		UCSRC |= (1 << UPM1);		//even parity
-		UCSRC |= (1 << USBS);	//2 stop bits
+		UBRRH=(unsigned char)(uBrr>>8);
+		UBRRL=(unsigned char)uBrr;
+		UCSRB = (1<<RXEN)|(1<<TXEN);            //enable receiver and transmitter
+		UCSRC = (1<<URSEL)|(1<<USBS)|(3<<UCSZ0);
 	}
 
 	void write( unsigned char dAta ){		//working fine
 	/* Wait for empty transmit buffer */
-		while (!( UCSRA & (1<<UDRE)));            // wait while register is free
-    UDR = dAta;		//write data on register
+	/* Wait for empty transmit buffer */
+	while ( !( UCSRA & (1<<UDRE)) )
+	;
+	/* Put data into buffer, sends the data */
+	UDR = 0b00000011;
 	}
 
-	uint8_t available(void){	//working fine
+	/*uint8_t available(void){	//working fine
 		 if((UCSRA & (1<<RXC)))
 			return 1;
 
 		else
 			return 0;
-	}
+	}*/
 
 	unsigned char read( void ){		//PROBLEM: rx frame error in proteus
 	/* Wait for data to be received */
