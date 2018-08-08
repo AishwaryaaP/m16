@@ -66,6 +66,32 @@ const uint8_t A=1,B=2,C=3,D=4,lowerNibble=8,higherNibble=9,ALL=10,D4=4,D5=5;
 void (*cAllisr)(void);		//function pointer used in ISR()
 
 
+ 
+
+
+
+void Dmilli(int j)
+{ 
+	TCCR0|=(1<<WGM01);
+	TCCR0|=(1<<CS00);
+	TIMSK|=(1<<OCIE0);
+	OCR0=255;
+	TCNT0=0;
+long int x=31.50*j;
+long	int i;
+    for(i=0;i<x;i++)
+    {
+		while(!(TIFR & (1 << OCF0))) 
+        {
+            
+        }
+        TIFR|=(1<<OCF0);
+	} 
+
+}
+
+
+
 void pinMode(uint8_t rEgister,uint8_t bIt, uint8_t mOde)		// eg: bitDefine(A,5,OUTPUT);
 {
 	if((bIt==lowerNibble)&&(mOde==OUTPUT))		//to set whole INPUTer nibble as output
@@ -497,6 +523,20 @@ uint8_t analogRead(uint8_t cHannel)
 	while(ADCSRA & (1<<ADSC))
 
 	return(ADC);
+}
+
+int AnalogRead(int x)
+{
+
+
+//prescalar set to default
+  ADMUX=(1<<REFS0)|(0<<REFS1);
+  ADCSRA|=(1<<ADEN);
+  ADMUX|=x;//chose value from 0 to 7 to chose adc pin accordingly
+  ADCSRA|=(1<<ADEN);
+  ADCSRA|=(1<<ADSC);
+ while(ADCSRA&(1<<ADSC));
+ return (ADC);
 }
 
 class Serial{
