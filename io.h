@@ -717,3 +717,31 @@ int main() {
 		loop();
 	}
 }
+
+
+int analog_write(int x)
+{
+	
+	
+	//initialize TCCR0 as per requirement, say as follows
+	TCCR0 |= (1<<WGM00)|(1<<COM01)|(1<<CS00)|(1<<FOC0);//initializing timer0
+	TCNT0=0;//initializing timer counter
+	DDRB =0b11111111;
+	
+	
+	
+	//TCCR0 |=(1<<CS11);
+	
+	// make sure to make OC0 pin (pin PB3 for atmega32) as output pin
+	//TCNT0=0;
+	
+	
+		OCR0=x;//setting pwm pin at duty cycle
+		_delay_ms(5);
+	
+	
+	
+	
+	
+}
+
