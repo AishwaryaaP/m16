@@ -66,7 +66,21 @@ const uint8_t A=1,B=2,C=3,D=4,lowerNibble=8,higherNibble=9,ALL=10,D4=4,D5=5;
 void (*cAllisr)(void);		//function pointer used in ISR()
 
 
- 
+ int millis()
+{float l;
+	l=x*0.16+0.00000625*TCNT0;
+return l;
+}
+
+void tinit(void)
+{
+	TCCR0|=(1<<WGM01);
+	TCCR0|=(1<<CS00);
+	TIMSK|=(1<<TOV0);
+	TCNT0=0;
+}
+ISR(TIMER0_OVF_vect)
+{x++;	}
 
 void USART_Init( unsigned int ubrr)
 {
@@ -86,8 +100,8 @@ void USART_Transmit( unsigned char data )
 	/* Put data into buffer, sends the data */
 	UDR = data;
 	_delay_ms(100);
-	
-	
+
+
 }
 unsigned char USART_Receive( void )
 {
@@ -100,7 +114,7 @@ return UDR;}
 
 
 void Dmilli(int j)
-{ 
+{
 	TCCR0|=(1<<WGM01);
 	TCCR0|=(1<<CS00);
 	TIMSK|=(1<<OCIE0);
@@ -110,12 +124,12 @@ long int x=31.50*j;
 long	int i;
     for(i=0;i<x;i++)
     {
-		while(!(TIFR & (1 << OCF0))) 
+		while(!(TIFR & (1 << OCF0)))
         {
-            
+
         }
         TIFR|=(1<<OCF0);
-	} 
+	}
 
 }
 
@@ -750,27 +764,27 @@ int main() {
 
 int analog_write(int x)
 {
-	
-	
+
+
 	//initialize TCCR0 as per requirement, say as follows
 	TCCR0 |= (1<<WGM00)|(1<<COM01)|(1<<CS00)|(1<<FOC0);//initializing timer0
 	TCNT0=0;//initializing timer counter
 	DDRB =0b11111111;
-	
-	
-	
+
+
+
 	//TCCR0 |=(1<<CS11);
-	
+
 	// make sure to make OC0 pin (pin PB3 for atmega32) as output pin
 	//TCNT0=0;
-	
-	
+
+
 		OCR0=x;//setting pwm pin at duty cycle
 		_delay_ms(5);
-	
-	
-	
-	
-	
+
+
+
+
+
 }
 
