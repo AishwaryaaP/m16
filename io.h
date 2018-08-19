@@ -795,12 +795,12 @@ void I2C_Init()
 	TWBR = BITRATE(TWSR=0x00);	
 }
 
-void master_start(int add)//function to initiate the master
+int master_start(int add)//function to initiate the master
 {
 	int status;
 	TWCR=(1<<TWEN)|(1<<TWSTA)|(1<<TWINT);
 	//TWBR=0x08;  
-	TWDR=add;
+	TWDR=add;//writing addresss in twdr register
 	
 
 	while(!(TWCR&(1<<TWINT)));
@@ -808,9 +808,10 @@ void master_start(int add)//function to initiate the master
 	if(status==0x08)//checking whether start condition transmitted or not
 	{
 		//while(!(TWCR&(1<<TWINT)));
-		PORTB=0b11111111;
-		_delay_ms(5);
+		//PORTB=0b11111111;
+		//_delay_ms(5);
 		//PORTB=0b00000000;
+		return 0;
 		
 	}
 	//TWDR=add;
@@ -820,9 +821,10 @@ void master_start(int add)//function to initiate the master
 	if(status==0x18)//checking for address successfully sent
 	{
 		//while(!(TWCR&(1<<TWINT)));
-		PORTA=0b11111111;
-		_delay_ms(5);
+		//PORTA=0b11111111;
+		//_delay_ms(5);
 		//PORTA=0b00000000;
+		return 1;
 	}
 	while(!(TWCR&(1<<TWINT)));
 	status=TWSR&0xF8;
@@ -859,9 +861,10 @@ void master_write(long int data)//function to write data on SDA
 	if(status==0x28)
 	{
 		//while(!(TWCR&(1<<TWINT)));
-		PORTD=0b11111111;
+		//PORTD=0b11111111;
 		
-		_delay_ms(5);
+		//_delay_ms(5);
+		return 2;
 	}
 	
 	
@@ -872,8 +875,9 @@ void master_write(long int data)//function to write data on SDA
 	if(status==0x30)//checking for data sent and ack received
 	{
 		//while(!(TWCR&(1<<TWINT)));
-		PORTD=0b00000010;
-		_delay_ms(5);
+		//PORTD=0b00000010;
+		//_delay_ms(5);
+		return 3;
 	}
 }
 
@@ -902,9 +906,10 @@ int8_t Slave_listen()//function for slave to listen to master
 		 if(status==0x60)	
 		 {
 			 // while(!(TWCR&(1<<TWINT)));
-			 PORTD=0b11111111;
-			 _delay_ms(50);
+			// PORTD=0b11111111;
+			 //_delay_ms(50);
 			// PORTD=0b00000000;
+			 return 4;
 		 }
 		 
 		 
@@ -929,8 +934,9 @@ int slave_receive()//function for slave to receive data from master
 	if(status==0x80)
 	{
 		//while(!(TWCR&(1<<TWINT)));
-		PORTD=0b00000000;
-		_delay_ms(15);
+		//PORTD=0b00000000;
+		//_delay_ms(15);
+		return 5;
 		
 	}
 	TWCR=(1<<TWEN)|(1<<TWINT);
@@ -948,6 +954,7 @@ int slave_receive()//function for slave to receive data from master
     if(status==0xA0)
 	{
 		//PORTB=0b11111111;
+	    return -1;
 	}
 	
 	
