@@ -164,3 +164,186 @@ public:
 };
 
 TwoWire Wire;
+void I2C_Init()			
+{
+	TWBR = BITRATE(TWSR=0x00);	
+}
+
+int master_start(int add)//function to initiate the master
+{
+	int status;
+	TWCR=(1<<TWEN)|(1<<TWSTA)|(1<<TWINT);
+	//TWBR=0x08;  
+	TWDR=add;//writing addresss in twdr register
+	
+
+	while(!(TWCR&(1<<TWINT)));
+	status=TWSR&0xF8;
+	if(status==0x08)//checking whether start condition transmitted or not
+	{
+		//while(!(TWCR&(1<<TWINT)));
+		//PORTB=0b11111111;
+		//_delay_ms(5);
+		//PORTB=0b00000000;
+		return 0;
+		
+	}
+	//TWDR=add;
+	TWCR=(1<<TWINT)|(1<<TWEN);
+	while(!(TWCR&(1<<TWINT)));
+	status=TWSR&0xF8;
+	if(status==0x18)//checking for address successfully sent
+	{
+		//while(!(TWCR&(1<<TWINT)));
+		//PORTA=0b11111111;
+		//_delay_ms(5);
+		//PORTA=0b00000000;
+		return 1;
+	}
+	while(!(TWCR&(1<<TWINT)));
+	status=TWSR&0xF8;
+}
+   /*  if(status==0x20)
+	{
+		//while(!(TWCR&(1<<TWINT)));
+		PORTA=0b00000000;
+		_delay_ms(5);
+		//PORTD=0b00000000;
+	}
+	else
+	{
+		//PORTD=0b11111111;
+	}
+	
+	
+	
+	
+	
+}*/
+
+void master_write(long int data)//function to write data on SDA
+{
+	int status;
+	//int i;
+	
+	
+		TWDR=data;
+	
+	TWCR=(1<<TWINT)|(1<<TWEN);
+	while(!(TWCR&(1<<TWINT)));
+	status=TWSR&0xF8;
+	if(status==0x28)
+	{
+		//while(!(TWCR&(1<<TWINT)));
+		//PORTD=0b11111111;
+		
+		//_delay_ms(5);
+		return 2;
+	}
+	
+	
+		//PORTA=0b00000000;
+	TWCR=(1<<TWINT)|(1<<TWEN);
+	while(!(TWCR&(1<<TWINT)));
+	status=TWSR&0xF8;
+	if(status==0x30)//checking for data sent and ack received
+	{
+		//while(!(TWCR&(1<<TWINT)));
+		//PORTD=0b00000010;
+		//_delay_ms(5);
+		return 3;
+	}
+}
+
+void master_stop()
+{
+	TWCR=(1<<TWSTO)|(1<<TWINT)|(1<<TWEN);
+	//while(!(TWCR&(1<<TWINT)));
+}
+
+//I2C slave code
+void slave_init(int add)//initializing slave
+{
+	TWAR=add;
+	TWCR=(1<<TWEA)|(1<<TWEN)|(1<<TWINT);
+	
+}
+int8_t Slave_listen()//function for slave to listen to master
+{
+	 
+	    while(1)
+		{
+		 uint8_t status;
+		// TWCR=(1<<TWINT)|(1<<TWEN);			
+		 while(!(TWCR&(1<<TWINT)));	
+		 status=TWSR&0xF8;		
+		 if(status==0x60)	
+		 {
+			 // while(!(TWCR&(1<<TWINT)));
+			// PORTD=0b11111111;
+			 //_delay_ms(50);
+			// PORTD=0b00000000;
+			 return 4;
+		 }
+		 
+		 
+	
+		 	
+		 else
+		 {
+		   break;
+		 }
+		
+	}		/* Else continue */
+	 
+ }
+	
+
+int slave_receive()//function for slave to receive data from master
+{
+	int status;
+	TWCR=(1<<TWEN)|(1<<TWINT)|(1<<TWEA);
+	while(!(TWCR&(1<<TWINT)));
+	status=TWSR&0xF8;
+	if(status==0x80)
+	{
+		//while(!(TWCR&(1<<TWINT)));
+		//PORTD=0b00000000;
+		//_delay_ms(15);
+		return 5;
+		
+	}
+	TWCR=(1<<TWEN)|(1<<TWINT);
+	while(!(TWCR&(1<<TWINT)));
+	status=TWSR&0xF8;
+	if(status==0x88 || status==0x98)
+	{
+		//PORTB=0b11111111;
+		//_delay_ms(15);
+		return TWDR;
+	}
+	TWCR=(1<<TWEN)|(1<<TWINT);
+	while(!(TWCR&(1<<TWINT)));
+	status=TWSR&0xF8;
+    if(status==0xA0)
+	{
+		//PORTB=0b11111111;
+	    return -1;
+	}
+	
+	
+	 
+	//else if(status==0xA0)
+	
+		//PORTA=0b00000000;
+		//TWCR=(1<<TWINT);
+	
+
+	
+		//PORTB=0b00000000;
+	
+	//return TWDR;
+
+	
+}
+
