@@ -787,7 +787,7 @@ int analog_write(int x)
 
 
 }
-int analog_write(int x,int y)
+int analogWrite(int x,int y)
 {
 	
 	
