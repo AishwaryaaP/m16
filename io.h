@@ -54,6 +54,7 @@ void initADC();
 uint8_t analogRead(uint8_t);
 void attachInterrupt(int,void*,int);
 double map(double,double,double,double,double);
+double constrain(double,double,double);
 void setup();
 void loop();
 
@@ -64,7 +65,6 @@ const uint8_t A=1,B=2,C=3,D=4,lowerNibble=8,higherNibble=9,ALL=10,D4=4,D5=5;
 //variables for user interface
 /***VARIABLES lowerNibble, higherNibble, ALL ARE FOR SETTING A SET OF BIT AT ONCE***/
 void (*cAllisr)(void);		//function pointer used in ISR()
-
 
  int millis()
 {float l;
@@ -750,6 +750,15 @@ double map(double vAlue, double fromLow, double fromHigh, double toLow, double t
 	return ((vAlue-fromLow)/abs(fromHigh-fromLow)*abs(toHigh+toLow));
 }
 
+double constrain(double num,double x,double y)
+{
+	if(num<x){
+		return x;}
+	if(num>y){
+		return y;}
+	else
+	return num;	
+}
 
 EEPROM EEPROM;
 Serial Serial;
