@@ -629,78 +629,79 @@ class Serial{
 
 };
 
-void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:LOW=0,HIGH1,RISING=2,FALLING=3
+void attachInterrupt(int intpin, void (*isrfunc)(void), int cOmpare)		//cOmpare:LOW=0,HIGH1,RISING=2,FALLING=3
 {
 	sei();
-	cAllisr=iSrfunc;
-	switch(iNtpin)			//enabling interrupt pin
+	cAllisr=isrfunc;
+	
+    switch(intpin)	  //enabling interrupt pin
 	{
 		case 0:
-		GICR|=1<<INT0;
+		GICR= 1<<INT0;
+		
 		switch(cOmpare)
 		{
-			case RISING:
-			MCUCR|=(1<<ISC00)|(1<<ISC01);
+			case 2: 
+		        MCUCR|=(1<<ISC00)|(1<<ISC01);
 			break;
 
-			case FALLING:
+			case 3: 
 			MCUCR|=(0<<ISC00)|(1<<ISC01);
 			break;
 
-			case CHANGE:
+			case 4:
 			MCUCR|=(1<<ISC00)|(0<<ISC01);
 			break;
 
 			default:
 			MCUCR|=(0<<ISC00)|(0<<ISC01);
-			break;
+			
 		}
 		break;
 
 		case 1:
 		GICR|=1<<INT1;
-		switch(cOmpare)
+		switch(compare)
 		{
-			case RISING:
+			case 2:
 			MCUCR|=(1<<ISC10)|(1<<ISC11);
 			break;
 
-			case FALLING:
+			case 3:
 			MCUCR|=(0<<ISC10)|(1<<ISC11);
 			break;
 
-			case CHANGE:
+			case 4:
 			MCUCR|=(1<<ISC10)|(0<<ISC11);
 			break;
 
 			default:
-			MCUCR|=(0<<ISC10)|(0<<ISC11);
-			break;
+			MCUCR|=(0<<ISC00)|(0<<ISC01);
+			
 		}
 		break;
 
 		case 2:
 		GICR|=1<<INT2;
-		switch(cOmpare)
+		switch(compare)
 		{
-			case RISING:
+			case 2:
 			MCUCSR|=(1<<ISC2);
 			break;
 
-			case FALLING:
+			case 3:
 			MCUCSR|=(0<<ISC2);
 			break;
 
 			default:
 			MCUCSR|=(0<<ISC2);
-			break;
+			
 		}
 		break;
 
 		default:
-		break;
-
-	}
+		MCUCR|=(0<<ISC00)|(0<<ISC01); 
+       }	 
 }
 
 ISR(INT0_vect)
@@ -713,9 +714,9 @@ ISR(INT1_vect)
 }
 ISR(INT2_vect)
 {
+	
 	cAllisr();
 }
-
 class EEPROM{
 	void write(unsigned int aDdress, unsigned char dAta)
 	{
