@@ -797,7 +797,8 @@ int analog_write(int x)
 
 
 }
-int analogWrite(int x,int y)
+//atmega16
+int analogWrite(int pin,int duty)
 {
 	
 	
@@ -816,14 +817,34 @@ int analogWrite(int x,int y)
 	//TCNT0=0;
 	
 	
-	OCR1A=x;
-	OCR1B=y;
-	_delay_ms(5);
+	 if(pin==1)
+  {
+    OCR1A=duty;
+  }
+  else if(pin==2)
+  {
+    OCR1B=duty;
+  }
+}
 	
 	
 	
 	
 	
+}
+//atmega2560
+int analogWrite1(int pin,int duty)
+{
+  TCCR1B=(1<<CS11)|(1<<CS10);
+  TCCR1A=(1<<WGM10)|(1<<WGM12)|(1<<COM1A1)|(1<<COM1B1);
+  if(pin==1)
+  {
+    OCR1A=duty;
+  }
+  else if(pin==2)
+  {
+    OCR1B=duty;
+  }
 }
 
 
