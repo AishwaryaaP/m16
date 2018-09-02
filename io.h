@@ -54,8 +54,6 @@ double map(double,double,double,double,double);
 double constrain(double,double,double);
 void setup();
 void loop();
-void (*cAllisr) (void);
-void (*uSerfun) (void);
 unsigned int millis();
 unsigned long pulseIn(volatile uint8_t , uint8_t );
 unsigned long microsecondsToInches(unsigned long );
@@ -111,7 +109,7 @@ const uint8_t A=1,B=2,C=3,D=4,lowerNibble=8,higherNibble=9,ALL=10,D4=4,D5=5;
 //variables for user interface
 /***VARIABLES lowerNibble, higherNibble, ALL ARE FOR SETTING A SET OF BIT AT ONCE***/
 void (*cAllisr)(void);		//function pointer used in ISR()
-
+void (*uSerfun) (void);         //function pointer used inISR() of softwareInterrupt
 unsigned int millis()
 {       
 	float l;
