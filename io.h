@@ -756,18 +756,13 @@ double map(double vAlue, double fromLow, double fromHigh, double toLow, double t
 
 double constrain(double nUm,double x,double y)
 {
-	if(nUm<x){
-		return x;}
-	if(num>y){
-		return y;}
-	else
-	return nUm;	
+	if(nUm<x){return x;}
+	if(nUm>y){return y;}
+	else return nUm;	
 }
 
 EEPROM EEPROM;
 Serial Serial;
-
-
 int main() {
 	setup();
 	while (1) {
@@ -775,18 +770,12 @@ int main() {
 	}
 }
 
-
 int analogWrite(int pIn,int dUtycycle)
 {
-	
-	
 	//initialize TCCR0 as per requirement, say as follows
 	TCCR1A |= (1<<WGM10)|(1<<COM1A1)|(1<<COM1B1);//initializing timer1
 	TCCR1B |=(1<<CS10);
-	
 	TCNT1=0;
-	
-	
 	if(pin==1)
   	{
     		OCR1A=dUtycycle;
@@ -796,14 +785,3 @@ int analogWrite(int pIn,int dUtycycle)
   	 	OCR1B=dUtycycle;
   	}
 }
-	
-	
-	
-	
-	
-
-
-
-
-
-
