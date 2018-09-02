@@ -44,10 +44,6 @@
 #include <avr/pgmspace.h>
 #include <math.h>
 #include <stdlib.h>
-
-void pinMode(uint8_t,uint8_t,uint8_t);	//register declaration	eg:(i/o register name, i/o bit of register/nibble/all bits, OUPUT/LOW)
-void digitalWrite(uint8_t,uint8_t,uint8_t);	//setting bit high or low eg:(i/o register name, i/o bit of register/nibble/all bits, HIGH/LOW)
-uint8_t digitalRead(uint8_t,uint8_t);		//reading the state of bit eg:(i/o register name, i/o bit of register only)
 void delay(unsigned long);		//simpler form of delay function in avr
 void analogWrite(uint8_t, uint8_t);		//PWM function using TIMER 0   ***NOTE:Timer 0 cannot be used if this function is used in the code***
 void initADC();
@@ -137,8 +133,6 @@ void USART_Transmit( unsigned char data )
 	/* Put data into buffer, sends the data */
 	UDR = data;
 	_delay_ms(100);
-
-
 }
 unsigned char USART_Receive( void )
 {
@@ -266,12 +260,12 @@ class Serial{
 
 };
 
-void attachInterrupt(int intpin, void (*isrfunc)(void), int cOmpare)		//cOmpare:LOW=0,HIGH1,RISING=2,FALLING=3
+void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:LOW=0,HIGH1,RISING=2,FALLING=3
 {
 	sei();
 	cAllisr=isrfunc;
 	
-    switch(intpin)	  //enabling interrupt pin
+       switch(iNtpin)	  //enabling interrupt pin
 	{
 		case 0:
 		GICR= 1<<INT0;
@@ -298,7 +292,7 @@ void attachInterrupt(int intpin, void (*isrfunc)(void), int cOmpare)		//cOmpare:
 
 		case 1:
 		GICR|=1<<INT1;
-		switch(compare)
+		switch(cOmpare)
 		{
 			case 2:
 			MCUCR|=(1<<ISC10)|(1<<ISC11);
@@ -320,7 +314,7 @@ void attachInterrupt(int intpin, void (*isrfunc)(void), int cOmpare)		//cOmpare:
 
 		case 2:
 		GICR|=1<<INT2;
-		switch(compare)
+		switch(cOmpare)
 		{
 			case 2:
 			MCUCSR|=(1<<ISC2);
@@ -387,14 +381,14 @@ double map(double vAlue, double fromLow, double fromHigh, double toLow, double t
 	return ((vAlue-fromLow)/abs(fromHigh-fromLow)*abs(toHigh+toLow));
 }
 
-double constrain(double num,double x,double y)
+double constrain(double nUm,double x,double y)
 {
-	if(num<x){
+	if(nUm<x){
 		return x;}
-	if(num>y){
+	if(nUm>y){
 		return y;}
 	else
-	return num;	
+	return nUm;	
 }
 
 EEPROM EEPROM;
