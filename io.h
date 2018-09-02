@@ -57,6 +57,7 @@ double map(double,double,double,double,double);
 double constrain(double,double,double);
 void setup();
 void loop();
+unsigned int millis();
 
 const uint8_t OUTPUT=1,INPUT=0;
 const uint8_t HIGH=1,LOW=0;
@@ -66,21 +67,14 @@ const uint8_t A=1,B=2,C=3,D=4,lowerNibble=8,higherNibble=9,ALL=10,D4=4,D5=5;
 /***VARIABLES lowerNibble, higherNibble, ALL ARE FOR SETTING A SET OF BIT AT ONCE***/
 void (*cAllisr)(void);		//function pointer used in ISR()
 
- int millis()
+unsigned int millis()
 {float l;
 	l=x*0.16+0.00000625*TCNT0;
 return l;
 }
 
-void tinit(void)
-{
-	TCCR0|=(1<<WGM01);
-	TCCR0|=(1<<CS00);
-	TIMSK|=(1<<TOV0);
-	TCNT0=0;
-}
-ISR(TIMER0_OVF_vect)
-{x++;	}
+
+
 
 void USART_Init( unsigned int ubrr)
 {
@@ -772,33 +766,7 @@ int main() {
 }
 
 
-int analog_write(int x)
-{
-
-
-	//initialize TCCR0 as per requirement, say as follows
-	TCCR0 |= (1<<WGM00)|(1<<COM01)|(1<<CS00)|(1<<FOC0);//initializing timer0
-	TCNT0=0;//initializing timer counter
-	DDRB =0b11111111;
-
-
-
-	//TCCR0 |=(1<<CS11);
-
-	// make sure to make OC0 pin (pin PB3 for atmega32) as output pin
-	//TCNT0=0;
-
-
-		OCR0=x;//setting pwm pin at duty cycle
-		_delay_ms(5);
-
-
-
-
-
-}
-//atmega16
-int analogWrite(int pin,int duty)
+int analogWrite(int pIn,int dUtycycle)
 {
 	
 	
@@ -806,46 +774,25 @@ int analogWrite(int pin,int duty)
 	TCCR1A |= (1<<WGM10)|(1<<COM1A1)|(1<<COM1B1);//initializing timer1
 	TCCR1B |=(1<<CS10);
 	
-	TCNT1=0;//initializing timer counter
-	//DDRB =0b11111111;
+	TCNT1=0;
 	
 	
-	
-	//TCCR0 |=(1<<CS11);
-	
-	// make sure to make OC0 pin (pin PB3 for atmega32) as output pin
-	//TCNT0=0;
-	
-	
-	 if(pin==1)
-  {
-    OCR1A=duty;
-  }
-  else if(pin==2)
-  {
-    OCR1B=duty;
-  }
+	if(pin==1)
+  	{
+    		OCR1A=dUtycycle;
+  	}
+  	else if(pin==2)
+  	{
+  	 	OCR1B=dUtycycle;
+  	}
 }
 	
 	
 	
 	
 	
-}
-//atmega2560
-int analogWrite1(int pin,int duty)
-{
-  TCCR1B=(1<<CS11)|(1<<CS10);
-  TCCR1A=(1<<WGM10)|(1<<WGM12)|(1<<COM1A1)|(1<<COM1B1);
-  if(pin==1)
-  {
-    OCR1A=duty;
-  }
-  else if(pin==2)
-  {
-    OCR1B=duty;
-  }
-}
+
+
 
 
 
