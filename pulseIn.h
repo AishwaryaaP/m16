@@ -1,4 +1,4 @@
-unsigned long pulse_In(volatile uint8_t , uint8_t );
+unsigned long pulseIn(volatile uint8_t , uint8_t );
 unsigned long microsecondsToInches(unsigned long );
 unsigned long microsecondsToCentimeters(unsigned long );
 
@@ -18,7 +18,7 @@ unsigned long microsecondsToCentimeters(unsigned long mIcroseconds) {
   return (mIcroseconds*0.17/ 2);
 }
 
-unsigned long pulse_In(volatile uint8_t pInno, uint8_t vAlue)
+unsigned long pulseIn(volatile uint8_t pInno, uint8_t vAlue)
 {
   TCCR2 = (1 << WGM21) | (1 << COM21) | (1 << FOC2) | (0 << COM20) | (0 << WGM20); //initializing in CTC mode
   TCCR2 = (1 << CS20);
