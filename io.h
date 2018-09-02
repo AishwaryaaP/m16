@@ -49,10 +49,13 @@ void analogWrite(uint8_t, uint8_t);		//PWM function using TIMER 0   ***NOTE:Time
 void initADC();
 uint8_t analogRead(uint8_t);
 void attachInterrupt(int,void*,int);
+void softwareInterrupt(void*);
 double map(double,double,double,double,double);
 double constrain(double,double,double);
 void setup();
 void loop();
+void (*cAllisr) (void);
+void (*uSerfun) (void);
 unsigned int millis();
 unsigned long pulseIn(volatile uint8_t , uint8_t );
 unsigned long microsecondsToInches(unsigned long );
@@ -345,8 +348,19 @@ ISR(INT1_vect)
 }
 ISR(INT2_vect)
 {
-	
 	cAllisr();
+}
+void softwareInterrupt(void *iSrfun(void))
+{
+	sei();
+	uSerfun = iSrfun;
+        TCCR0=(1<<WGM01)|(1<<WGM00)|(1<<CS00);  //fast pwm and prescalar is 1 
+	TIMSK=1<<TOIE0;                         //overflow interrupt flag is set
+}
+
+ISR(TIMER0_OVF_vect)
+{
+        uSerfun();
 }
 class EEPROM{
 	void write(unsigned int aDdress, unsigned char dAta)
