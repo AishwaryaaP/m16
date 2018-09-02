@@ -518,32 +518,7 @@ void delayMicroseconds(unsigned long microsec)
 	return;
 }
 
-void analogWrite(uint8_t vAlue,uint8_t pWmpin)
-{
 
-	DDRD   |= (1<<PD4)|(1<<PD5);		//PWM pins for TIMER 1
-	TCCR1A|=(1<<WGM10)|(1<<COM1A1)|(0<<COM1A0)|(1<<COM1B1)|(0<<COM1B0);		//fast pwm 8bit, inverting, prescaler=1
-	TCCR1B|=(1<<WGM12)|(1<<CS10);
-	TCNT1=0;
-
-	if(pWmpin==4)
-	{
-		OCR1B=vAlue;
-	}
-
-	else if(pWmpin==5)
-	{
-		OCR1A=vAlue;
-	}
-
-	else
-	{
-		OCR1A=0;
-		OCR1B=0;
-	}
-
-	return;
-}
 
 void initADC()
 {
