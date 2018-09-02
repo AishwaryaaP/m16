@@ -201,9 +201,7 @@ uint8_t analogRead(uint8_t cHannel)
 
 int AnalogRead(int x)
 {
-
-
-//prescalar set to default
+  //prescalar set to default
   ADMUX=(1<<REFS0)|(0<<REFS1);
   ADCSRA|=(1<<ADEN);
   ADMUX|=x;//chose value from 0 to 7 to chose adc pin accordingly
@@ -273,20 +271,16 @@ void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:
 			case 2: 
 		        MCUCR|=(1<<ISC00)|(1<<ISC01);
 			break;
-
 			case 3: 
 			MCUCR|=(0<<ISC00)|(1<<ISC01);
 			break;
-
 			case 4:
 			MCUCR|=(1<<ISC00)|(0<<ISC01);
 			break;
-
 			default:
 			MCUCR|=(0<<ISC00)|(0<<ISC01);
 		}
-		break;
-			
+		break;	
 		case 1:
 		GICR|=1<<INT1;
 		switch(cOmpare)
@@ -294,20 +288,16 @@ void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:
 			case 2:
 			MCUCR|=(1<<ISC10)|(1<<ISC11);
 			break;
-
 			case 3:
 			MCUCR|=(0<<ISC10)|(1<<ISC11);
 			break;
-
 			case 4:
 			MCUCR|=(1<<ISC10)|(0<<ISC11);
 			break;
-
 			default:
 			MCUCR|=(0<<ISC00)|(0<<ISC01);
 	         }
 		break;
-			
 		case 2:
 		GICR|=1<<INT2;
 		switch(cOmpare)
@@ -315,11 +305,9 @@ void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:
 			case 2:
 			MCUCSR|=(1<<ISC2);
 			break;
-
 			case 3:
 			MCUCSR|=(0<<ISC2);
 			break;
-
 			default:
 			MCUCSR|=(0<<ISC2);
 		}
@@ -401,9 +389,11 @@ EEPROM EEPROM;
 Serial Serial;
 
 
-int main() {
+int main() 
+{
 	setup();
-	while (1) {
+	while (1) 
+	{
 		loop();
 	}
 }
