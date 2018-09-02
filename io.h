@@ -44,6 +44,10 @@
 #include <avr/pgmspace.h>
 #include <math.h>
 #include <stdlib.h>
+
+void pinMode(uint8_t,uint8_t,uint8_t);	//register declaration	eg:(i/o register name, i/o bit of register/nibble/all bits, OUPUT/LOW)
+void digitalWrite(uint8_t,uint8_t,uint8_t);	//setting bit high or low eg:(i/o register name, i/o bit of register/nibble/all bits, HIGH/LOW)
+uint8_t digitalRead(uint8_t,uint8_t);		//reading the state of bit eg:(i/o register name, i/o bit of register only)
 void delay(unsigned long);		//simpler form of delay function in avr
 void analogWrite(uint8_t, uint8_t);		//PWM function using TIMER 0   ***NOTE:Timer 0 cannot be used if this function is used in the code***
 void initADC();
@@ -164,396 +168,25 @@ void Dmilli(int j)
 	}
 }
 
-void pinMode(uint8_t rEgister,uint8_t bIt, uint8_t mOde)		// eg: bitDefine(A,5,OUTPUT);
-{
-	if((bIt==lowerNibble)&&(mOde==OUTPUT))		//to set whole INPUTer nibble as output
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			case(1):
-				DDRA|=0x0F;			//here it is OR'ed to retain the mode of higher nibble
-				break;
-			case(2):
-				DDRB|=0x0F;
-				break;
-			case(3):
-				DDRC|=0x0F;
-				break;
-			case(4):
-				DDRD|=0x0F;
-				break;
-		}
-	}
-
-	else if((bIt==lowerNibble)&&(mOde==INPUT))		//to set whole INPUTer nibble as INPUT
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			case(1):
-				DDRA&=0xF0;			//here it is ANDed to retain the mode of higher nibble
-				break;
-			case(2):
-				DDRB&=0xF0;
-				break;
-			case(3):
-				DDRC&=0xF0;
-				break;
-			case(4):
-				DDRD&=0xF0;
-				break;
-		}
-	}
-
-	else if((bIt==higherNibble)&&(mOde==OUTPUT))		//to set whole higher nibble as output
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			case(1):
-				DDRA|=0xF0;			//here it is OR'ed to retain the mode of INPUTer nibble
-				break;
-			case(2):
-				DDRB|=0xF0;
-				break;
-			case(3):
-				DDRC|=0xF0;
-				break;
-			case(4):
-				DDRD|=0xF0;
-				break;
-		}
-	}
-	else if((bIt==higherNibble)&&(mOde==INPUT))		//to set whole higher nibble as INPUT
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			case(1):
-				DDRA&=0x0F;			//here it is ANDed to retain the mode of INPUTer nibble
-				break;
-			case(2):
-				DDRB&=0x0F;
-				break;
-			case(3):
-				DDRC&=0x0F;
-				break;
-			case(4):
-				DDRD&=0x0F;
-				break;
-		}
-	}
-
-	else if((bIt==ALL)&&(mOde==OUTPUT))		//to set whole register as output
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-				case(1):
-				DDRA=0xFF;
-				break;
-			case(2):
-				DDRB=0xFF;
-				break;
-			case(3):
-				DDRC=0xFF;
-				break;
-			case(4):
-				DDRD=0xFF;
-				break;
-
-		}
-
-	}
-
-	else if((bIt==ALL)&&(mOde==INPUT))		//to set whole register as INPUT
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-				case(1):
-				DDRA=0x00;
-				break;
-			case(2):
-				DDRB=0x00;
-				break;
-			case(3):
-				DDRC|=0x00;
-				break;
-			case(4):
-				DDRD=0x00;
-				break;
-
-		}
-
-	}
-	else if((bIt<=7)&&(mOde==OUTPUT))
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			//eg: if OUTPUT is passed through function, mOde=1, bIt is corresponding value passed in function
-			case(1):
-				DDRA|=(1<<bIt); //do bitwise or and bit wise and
-				break;
-			case(2):
-				DDRB|=(1<<bIt);
-				break;
-			case(3):
-				DDRC|=(1<<bIt);
-				break;
-			case(4):
-				DDRD|=(1<<bIt);
-				break;
-
-		}
-	}
-
-	else if((bIt<=7)&&(mOde==INPUT))
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			//eg: if OUTPUT is passed through function, mOde=1, bIt is corresponding value passed in function
-			case(1):
-				DDRA&=~(1<<bIt); //do bitwise or and bit wise and
-				break;
-			case(2):
-				DDRB&=~(1<<bIt);
-				break;
-			case(3):
-				DDRC&=~(1<<bIt);
-				break;
-			case(4):
-				DDRD&=~(1<<bIt);
-				break;
-
-		}
-	}
-
-
-	/*switch(rEgister)		//to switch between i/o registers
-		{
-			//eg: if OUTPUT is passed through function, mOde=1, bIt is corresponding value passed in function
-			case(1):
-				DDRA=bIt; //do bitwise or and bit wise and
-				break;
-			case(2):
-				DDRB=bIt;
-				break;
-			case(3):
-				DDRC=bIt;
-				break;
-			case(4):
-				DDRD=bIt;
-				break;
-
-		}*/
-
-	return;
-}
-
-void digitalWrite(uint8_t rEgister,uint8_t bIt,uint8_t mOde)	// eg: setDigital(A,5,HIGH);
-{
-	if((bIt==lowerNibble)&&(mOde==HIGH))		//to set whole lower nibble as high
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			case(1):
-				PORTA|=0x0F;			//here it is OR'ed to retain the mode of higher nibble
-				break;
-			case(2):
-				PORTB|=0x0F;
-				break;
-			case(3):
-				PORTC|=0x0F;
-				break;
-			case(4):
-				PORTD|=0x0F;
-				break;
-		}
-	}
-
-	else if((bIt==lowerNibble)&&(mOde==LOW))		//to set whole lower nibble as low
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			case(1):
-				PORTA&=0xF0;			//here it is ANDed to retain the mode of higher nibble
-				break;
-			case(2):
-				PORTB&=0xF0;
-				break;
-			case(3):
-				PORTC&=0xF0;
-				break;
-			case(4):
-				PORTD&=0xF0;
-				break;
-		}
-	}
-
-	else if((bIt==higherNibble)&&(mOde==HIGH))		//to set whole higher nibble as HIGH
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			case(1):
-				PORTA|=0xF0;			//here it is OR'ed to retain the mode of lower nibble
-				break;
-			case(2):
-				PORTB|=0xF0;
-				break;
-			case(3):
-				PORTC|=0xF0;
-				break;
-			case(4):
-				PORTD|=0xF0;
-				break;
-		}
-	}
-	else if((bIt==higherNibble)&&(mOde==LOW))		//to set whole higher nibble as LOW
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			case(1):
-				PORTA&=0x0F;			//here it is ANDed to retain the mode of lower nibble
-				break;
-			case(2):
-				PORTB&=0x0F;
-				break;
-			case(3):
-				PORTC&=0x0F;
-				break;
-			case(4):
-				PORTD&=0x0F;
-				break;
-		}
-	}
-
-	else if((bIt==ALL)&&(mOde==HIGH))		//to set whole register as HIGH
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-				case(1):
-				PORTA=0xFF;
-				break;
-			case(2):
-				PORTB=0xFF;
-				break;
-			case(3):
-				PORTC=0xFF;
-				break;
-			case(4):
-				PORTD=0xFF;
-				break;
-
-		}
-
-	}
-
-	else if((bIt==ALL)&&(mOde==LOW))		//to set whole register as LOW
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-				case(1):
-				PORTA&=0x00;
-				break;
-			case(2):
-				PORTB&=0x00;
-				break;
-			case(3):
-				PORTC&=0x00;
-				break;
-			case(4):
-				PORTD&=0x00;
-				break;
-
-		}
-
-	}
-
-	else if((bIt<=7)&&(mOde==HIGH))
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			//eg: if HIGH is passed through function, mOde=1, bIt is corresponding value passed in function
-			case(1):
-				PORTA|=(1<<bIt);
-				break;
-			case(2):
-				PORTB|=(1<<bIt);
-				break;
-			case(3):
-				PORTC|=(1<<bIt);
-				break;
-			case(4):
-				PORTD|=(1<<bIt);
-				break;
-
-		}
-	}
-
-	else if((bIt<=7)&&(mOde==LOW))
-	{
-		switch(rEgister)		//to switch between i/o registers
-		{
-			//eg: if HIGH is passed through function, mOde=1, bIt is corresponding value passed in function
-			case(1):
-				PORTA&=~(1<<bIt);
-				break;
-			case(2):
-				PORTB&=~(1<<bIt);
-				break;
-			case(3):
-				PORTC&=~(1<<bIt);
-				break;
-			case(4):
-				PORTD&=~(1<<bIt);
-				break;
-
-		}
-	}
-	return;
-}
-
-uint8_t digitalRead(uint8_t rEgister,uint8_t bIt)	//eg: int x=getDigital(A,3); ***Note: this function returns a int value 1 or 0.***
-{
-	int vAlue;	//stores value either 1 or 0 and returns it
-	switch(rEgister)
-	{
-		case(1):
-			vAlue=PINA & (1<<bIt);
-			break;
-		case(2):
-			vAlue=PINB & (1<<bIt);
-			break;
-		case(3):
-			vAlue=PINC & (1<<bIt);
-			break;
-		case(4):
-			vAlue=PIND & (1<<bIt);
-			break;
-	}
-
-	/*((vAlue==(1<<bIt))?return 1:return 0);*/
-
-	return (vAlue==(1<<bIt));
-
-}
-
-void delay(unsigned long millisec)
+void delay(unsigned long mIllisec)
 {
 	int i;
-	for(i=0;i<millisec;i++)
+	for(i=0;i<mIllisec;i++)
 	{
 		_delay_ms(1);
 	}
 	return;
 }
-void delayMicroseconds(unsigned long microsec)
+
+void delayMicroseconds(unsigned long mIcrosec)
 {
 	int i;
-	for(i=0;i<microsec;i++)
+	for(i=0;i<mIcrosec;i++)
 	{
 		_delay_us(1);
 	}
 	return;
 }
-
-
 
 void initADC()
 {
@@ -582,8 +215,8 @@ int AnalogRead(int x)
   ADMUX|=x;//chose value from 0 to 7 to chose adc pin accordingly
   ADCSRA|=(1<<ADEN);
   ADCSRA|=(1<<ADSC);
- while(ADCSRA&(1<<ADSC));
- return (ADC);
+  while(ADCSRA&(1<<ADSC));
+  return (ADC);
 }
 
 class Serial{
@@ -616,9 +249,9 @@ class Serial{
 	}*/
 
 	unsigned char read( void ){		//PROBLEM: rx frame error in proteus
-	/* Wait for data to be received */
+	                                        // Wait for data to be received 
 		while(!(UCSRA) & (1<<RXC));           // wait while data is being received
-    return UDR;                             // return 8-bit data
+                return UDR;                             // return 8-bit data
 	}
 
 	void flush(void){
@@ -633,12 +266,12 @@ class Serial{
 
 };
 
-void attachInterrupt(int iNtpin, void (*isrfunc)(void), int cOmpare)		//cOmpare:LOW=0,HIGH1,RISING=2,FALLING=3
+void attachInterrupt(int intpin, void (*isrfunc)(void), int cOmpare)		//cOmpare:LOW=0,HIGH1,RISING=2,FALLING=3
 {
 	sei();
-	cAllisr=iSrfunc;
+	cAllisr=isrfunc;
 	
-        switch(iNtpin)	  //enabling interrupt pin
+    switch(intpin)	  //enabling interrupt pin
 	{
 		case 0:
 		GICR= 1<<INT0;
@@ -665,7 +298,7 @@ void attachInterrupt(int iNtpin, void (*isrfunc)(void), int cOmpare)		//cOmpare:
 
 		case 1:
 		GICR|=1<<INT1;
-		switch(cOmpare)
+		switch(compare)
 		{
 			case 2:
 			MCUCR|=(1<<ISC10)|(1<<ISC11);
@@ -687,7 +320,7 @@ void attachInterrupt(int iNtpin, void (*isrfunc)(void), int cOmpare)		//cOmpare:
 
 		case 2:
 		GICR|=1<<INT2;
-		switch(cOmpare)
+		switch(compare)
 		{
 			case 2:
 			MCUCSR|=(1<<ISC2);
@@ -754,15 +387,20 @@ double map(double vAlue, double fromLow, double fromHigh, double toLow, double t
 	return ((vAlue-fromLow)/abs(fromHigh-fromLow)*abs(toHigh+toLow));
 }
 
-double constrain(double nUm,double x,double y)
+double constrain(double num,double x,double y)
 {
-	if(nUm<x){return x;}
-	if(nUm>y){return y;}
-	else return nUm;	
+	if(num<x){
+		return x;}
+	if(num>y){
+		return y;}
+	else
+	return num;	
 }
 
 EEPROM EEPROM;
 Serial Serial;
+
+
 int main() {
 	setup();
 	while (1) {
@@ -770,12 +408,18 @@ int main() {
 	}
 }
 
+
 int analogWrite(int pIn,int dUtycycle)
 {
+	
+	
 	//initialize TCCR0 as per requirement, say as follows
 	TCCR1A |= (1<<WGM10)|(1<<COM1A1)|(1<<COM1B1);//initializing timer1
 	TCCR1B |=(1<<CS10);
+	
 	TCNT1=0;
+	
+	
 	if(pin==1)
   	{
     		OCR1A=dUtycycle;
