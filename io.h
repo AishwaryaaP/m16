@@ -263,13 +263,11 @@ class Serial{
 void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:LOW=0,HIGH1,RISING=2,FALLING=3
 {
 	sei();
-	cAllisr=isrfunc;
-	
-       switch(iNtpin)	  //enabling interrupt pin
+	cAllisr=iSrfunc;
+        switch(iNtpin)	  //enabling interrupt pin
 	{
 		case 0:
 		GICR= 1<<INT0;
-		
 		switch(cOmpare)
 		{
 			case 2: 
@@ -286,10 +284,9 @@ void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:
 
 			default:
 			MCUCR|=(0<<ISC00)|(0<<ISC01);
-			
 		}
 		break;
-
+			
 		case 1:
 		GICR|=1<<INT1;
 		switch(cOmpare)
@@ -308,10 +305,9 @@ void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:
 
 			default:
 			MCUCR|=(0<<ISC00)|(0<<ISC01);
-			
-		}
+	         }
 		break;
-
+			
 		case 2:
 		GICR|=1<<INT2;
 		switch(cOmpare)
@@ -326,15 +322,12 @@ void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:
 
 			default:
 			MCUCSR|=(0<<ISC2);
-			
 		}
 		break;
-
 		default:
 		MCUCR|=(0<<ISC00)|(0<<ISC01); 
        }	 
 }
-
 ISR(INT0_vect)
 {
 	cAllisr();
@@ -347,6 +340,7 @@ ISR(INT2_vect)
 {
 	cAllisr();
 }
+
 void softwareInterrupt(void *iSrfun(void))
 {
 	sei();
@@ -359,6 +353,7 @@ ISR(TIMER0_OVF_vect)
 {
         uSerfun();
 }
+
 class EEPROM{
 	void write(unsigned int aDdress, unsigned char dAta)
 	{
