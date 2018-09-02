@@ -114,22 +114,19 @@ const uint8_t A=1,B=2,C=3,D=4,lowerNibble=8,higherNibble=9,ALL=10,D4=4,D5=5;
 void (*cAllisr)(void);		//function pointer used in ISR()
 
 unsigned int millis()
-{float l;
+{       
+	float l;
 	l=x*0.16+0.00000625*TCNT0;
-return l;
+        return l;
 }
 
-
-
-
-void USART_Init( unsigned int ubrr)
+void USART_Init( unsigned int uBrr)
 {
 	/*Set baud rate */
-	UBRRH = (unsigned char)(ubrr>>8);
-	UBRRL = (unsigned char)ubrr;
+	UBRRH = (unsigned char)(uBrr>>8);
+	UBRRL = (unsigned char)uBrr;
 	/*Enable receiver and transmitter */
-UCSRB = (1<<RXEN)|(1<<TXEN);
-
+        UCSRB = (1<<RXEN)|(1<<TXEN);
 }
 /* Set frame format: 8data, 2stop bit */
 void USART_Transmit( unsigned char data )
@@ -145,13 +142,12 @@ void USART_Transmit( unsigned char data )
 }
 unsigned char USART_Receive( void )
 {
-/* Wait for data to be received */
-while ( !(UCSRA & (1<<RXC)) )
-;
-/* Get and return received data from buffer */
-return UDR;}
-
-
+	/* Wait for data to be received */
+	while ( !(UCSRA & (1<<RXC)) )
+	;
+	/* Get and return received data from buffer */
+	return UDR;
+}
 
 void Dmilli(int j)
 {
@@ -160,8 +156,8 @@ void Dmilli(int j)
 	TIMSK|=(1<<OCIE0);
 	OCR0=255;
 	TCNT0=0;
-long int x=31.50*j;
-long	int i;
+        long int x=31.50*j;
+        long	int i;
     for(i=0;i<x;i++)
     {
 		while(!(TIFR & (1 << OCF0)))
@@ -170,10 +166,7 @@ long	int i;
         }
         TIFR|=(1<<OCF0);
 	}
-
 }
-
-
 
 void pinMode(uint8_t rEgister,uint8_t bIt, uint8_t mOde)		// eg: bitDefine(A,5,OUTPUT);
 {
