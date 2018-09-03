@@ -78,10 +78,10 @@ void attachInterrupt(int,void*,int);
 void softwareInterrupt(void*);
 double map(double,double,double,double,double);
 double constrain(double,double,double);
-unsigned float millis();
-unsigned double  pulseIn(volatile uint8_t , uint8_t );
-unsigned double microsecondsToInches(unsigned long );
-unsigned double microsecondsToCentimeters(unsigned long );
+float millis();
+double  pulseIn(volatile uint8_t , uint8_t );
+double microsecondsToInches(unsigned long );
+double microsecondsToCentimeters(unsigned long );
 void setup();
 void loop();
 const uint8_t OUTPUT=1,INPUT=0;
@@ -93,7 +93,7 @@ const uint8_t A=1,B=2,C=3,D=4,lowerNibble=8,higherNibble=9,ALL=10,D4=4,D5=5;
 void (*cAllisr)(void);		//function pointer used in ISR()
 void (*uSerfun) (void);         //function pointer used inISR() of softwareInterrupt
 
-unsigned long microsecondsToInches(unsigned long mIcroseconds) {
+double microsecondsToInches(unsigned long mIcroseconds) {
   // According to Parallax's datasheet for the PING))), there are 73.746
   // microseconds per inch (i.e. sound travels at 1130 feet per second).
   // This gives the distance travelled by the ping, outbound and return,
@@ -102,7 +102,7 @@ unsigned long microsecondsToInches(unsigned long mIcroseconds) {
   return (mIcroseconds*0.00669/ 2);
 }
 
-unsigned long microsecondsToCentimeters(unsigned long mIcroseconds) {
+double microsecondsToCentimeters(unsigned long mIcroseconds) {
   // The speed of sound is 340 m/s or 29 microseconds per centimeter.
   // The ping travels out and back, so to find the distance of the object we
   // take half of the distance travelled.
