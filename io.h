@@ -79,7 +79,7 @@ void softwareInterrupt(void*);
 double map(double,double,double,double,double);
 double constrain(double,double,double);
 float millis();
-double  pulseIn(volatile uint8_t , uint8_t );
+double pulseIn(volatile uint8_t , uint8_t );
 double microsecondsToInches(unsigned long );
 double microsecondsToCentimeters(unsigned long );
 void setup();
@@ -109,7 +109,7 @@ double microsecondsToCentimeters(unsigned long mIcroseconds) {
   return (mIcroseconds*0.17/ 2);
 }
 
-unsigned double pulseIn(volatile uint8_t pInno, uint8_t vAlue)
+double pulseIn(volatile uint8_t pInno, uint8_t vAlue)
 {
   TCCR2 = (1 << WGM21) | (1 << COM21) | (1 << FOC2) | (0 << COM20) | (0 << WGM20); //initializing in CTC mode
   TCCR2 = (1 << CS20);
