@@ -45,6 +45,30 @@
 #include <math.h>
 #include <stdlib.h>
 #include <avr/io.h>
+#define PC7 0
+#define PC6 1
+#define PC5 2
+#define PC4 3
+#define PC3 4
+#define PC2 5
+#define PC1 6
+#define PC0 7
+#define PD7 8
+#define PB0 9
+#define PB1 10
+#define PB2 11
+#define PB3 12
+#define PB4 13
+#define PB5 14
+#define PB6 15
+#define PB7 16
+#define PD0 17
+#define PD1 18
+#define PD2 19
+#define PD3 20
+#define PD4 21
+#define PD5 22
+#define PD6 23
 
 void delay(unsigned long);		//simpler form of delay function in avr
 void analogWrite(uint8_t, uint8_t);		//PWM function using TIMER 0   ***NOTE:Timer 0 cannot be used if this function is used in the code***
