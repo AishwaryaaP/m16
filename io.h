@@ -138,7 +138,7 @@ double pulseIn(volatile uint8_t pInno, uint8_t vAlue)
 float millis()//float and not int.
 {       
 	float mIlli;
-	mIlli=x*0.16+0.00000625*TCNT0;
+	mIlli=x*0.16+0.00000625*TCNT0;		//"x not declared"
         return mIlli;
 }
 
@@ -200,7 +200,7 @@ uint8_t analogRead(uint8_t cHannel)
   //prescalar set to default
   ADMUX=(1<<REFS0)|(0<<REFS1);
   ADCSRA|=(1<<ADEN);
-  ADMUX|=cHanne;//chose value from 0 to 7 to chose adc pin accordingly
+  ADMUX|=cHannel;//chose value from 0 to 7 to chose adc pin accordingly
   ADCSRA|=(1<<ADEN);
   ADCSRA|=(1<<ADSC);
   while(ADCSRA&(1<<ADSC));
