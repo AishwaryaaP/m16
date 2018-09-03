@@ -135,7 +135,7 @@ double pulseIn(volatile uint8_t pInno, uint8_t vAlue)
 	  }
   return wIdth;
 }
-unsigned float millis()//float and not int.
+float millis()//float and not int.
 {       
 	float mIlli;
 	mIlli=x*0.16+0.00000625*TCNT0;
