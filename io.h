@@ -54,10 +54,10 @@ void attachInterrupt(int,void*,int);
 void softwareInterrupt(void*);
 double map(double,double,double,double,double);
 double constrain(double,double,double);
-unsigned int millis();
-unsigned long pulseIn(volatile uint8_t , uint8_t );
-unsigned long microsecondsToInches(unsigned long );
-unsigned long microsecondsToCentimeters(unsigned long );
+unsigned float millis();
+unsigned double  pulseIn(volatile uint8_t , uint8_t );
+unsigned double microsecondsToInches(unsigned long );
+unsigned double microsecondsToCentimeters(unsigned long );
 void setup();
 void loop();
 const uint8_t OUTPUT=1,INPUT=0;
@@ -85,14 +85,14 @@ unsigned long microsecondsToCentimeters(unsigned long mIcroseconds) {
   return (mIcroseconds*0.17/ 2);
 }
 
-unsigned long pulseIn(volatile uint8_t pInno, uint8_t vAlue)
+unsigned double pulseIn(volatile uint8_t pInno, uint8_t vAlue)
 {
   TCCR2 = (1 << WGM21) | (1 << COM21) | (1 << FOC2) | (0 << COM20) | (0 << WGM20); //initializing in CTC mode
   TCCR2 = (1 << CS20);
   unsigned long mAxloops = 500000;
   unsigned long wIdth = 0;
   // wait for any previous pulse to end
-  while ( ((PIND)&&(pInno)) == vAlue)
+  while ( ((PIND)&&(pInno)) == vAlue)//remove PIND. It should be for every register.
 	  {
 		if (--mAxloops == 0)
 		  return 0;
@@ -111,11 +111,11 @@ unsigned long pulseIn(volatile uint8_t pInno, uint8_t vAlue)
 	  }
   return wIdth;
 }
-unsigned int millis()
+unsigned float millis()//float and not int.
 {       
-	float l;
-	l=x*0.16+0.00000625*TCNT0;
-        return l;
+	float mIlli;
+	mIlli=x*0.16+0.00000625*TCNT0;
+        return mIlli;
 }
 
 void USART_Init( unsigned int uBrr)
@@ -143,25 +143,6 @@ unsigned char USART_Receive( void )
 	;
 	/* Get and return received data from buffer */
 	return UDR;
-}
-
-void Dmilli(int j)
-{
-	TCCR0|=(1<<WGM01);
-	TCCR0|=(1<<CS00);
-	TIMSK|=(1<<OCIE0);
-	OCR0=255;
-	TCNT0=0;
-        long int x=31.50*j;
-        long	int i;
-    for(i=0;i<x;i++)
-    {
-		while(!(TIFR & (1 << OCF0)))
-        {
-
-        }
-        TIFR|=(1<<OCF0);
-	}
 }
 
 void delay(unsigned long mIllisec)
@@ -192,21 +173,10 @@ void initADC()
 
 uint8_t analogRead(uint8_t cHannel)
 {
-	initADC();
-	ADMUX|=cHannel;
-	ADCSRA|=(1<<ADSC);
-
-	while(ADCSRA & (1<<ADSC))
-
-	return(ADC);
-}
-
-int AnalogRead(int x)
-{
   //prescalar set to default
   ADMUX=(1<<REFS0)|(0<<REFS1);
   ADCSRA|=(1<<ADEN);
-  ADMUX|=x;//chose value from 0 to 7 to chose adc pin accordingly
+  ADMUX|=cHanne;//chose value from 0 to 7 to chose adc pin accordingly
   ADCSRA|=(1<<ADEN);
   ADCSRA|=(1<<ADSC);
   while(ADCSRA&(1<<ADSC));
@@ -377,31 +347,18 @@ double map(double vAlue, double fromLow, double fromHigh, double toLow, double t
 	return ((vAlue-fromLow)/abs(fromHigh-fromLow)*abs(toHigh+toLow));
 }
 
-double constrain(double nUm,double x,double y)
+double constrain(double nUm,double uPper,double lOwer)
 {
-	if(nUm<x){
-		return x;}
-	if(nUm>y){
-		return y;}
-	else
+	if(nUm<uPper){
+		return uPper;}
+	else if(nUm>lOwer){
+		return lOwer;}
+	else 
 	return nUm;	
 }
 
-EEPROM EEPROM;
-Serial Serial;
 
-
-int main() 
-{
-	setup();
-	while (1) 
-	{
-		loop();
-	}
-}
-
-
-int analogWrite(int pIn,int dUtycycle)
+void analogWrite(int pIn,int dUtycycle)
 {
 	
 	
@@ -420,4 +377,16 @@ int analogWrite(int pIn,int dUtycycle)
   	{
   	 	OCR1B=dUtycycle;
   	}
+}
+EEPROM EEPROM;
+Serial Serial;
+
+
+int main() 
+{
+	setup();
+	while (1) 
+	{
+		loop();
+	}
 }
