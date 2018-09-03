@@ -44,6 +44,8 @@
 #include <avr/pgmspace.h>
 #include <math.h>
 #include <stdlib.h>
+#include <avr/io.h>
+
 void delay(unsigned long);		//simpler form of delay function in avr
 void analogWrite(uint8_t, uint8_t);		//PWM function using TIMER 0   ***NOTE:Timer 0 cannot be used if this function is used in the code***
 void initADC();
