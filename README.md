@@ -143,3 +143,34 @@ Int main()
 }
 while(1) {             
 }
+
+softwareinterrupt LIBRARY:
+
+FUNCTIONS:
+1.void softwareInterrupt(): It enables internal interrupt.
+
+SYNTAX:
+void softwareInterrupt (*Isr ())
+
+PARAMETERS:
+*  isr(): ISR is called if internal interrupt is enabled.
+	No parameter 
+	Returns nothing
+Ex: #define F_CPU 1000000UL
+void func(void)
+{
+   PORTD=0b11111111; 
+   _delay_ms(500);   
+   PORTD=0b00000000;
+   _delay_ms(500);   // blinking a led
+}
+
+int main()
+{       DDRD=0X00;
+	PORTD=0XFF;
+	sei();
+        softwareInterrupt(*func);
+	while (1)
+	{
+        }
+}
