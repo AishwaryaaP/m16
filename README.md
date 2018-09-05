@@ -183,25 +183,33 @@ int main()
 FUNCTIONS:
 	1.	Lcd8_Init () & Lcd4_Init (): These functions will initialize the 16×2 LCD module connected to the microcontroller
 	        pins defined by the following constants.
+	
 	2.	Lcd8_Clear() & Lcd4_Clear() : Calling these functions will clear the 16×2 LCD display screen when interfaced with
 	        8 bit and 4 bit mode respectively.
+	
 	3.	Lcd8_SetCursor() & Lcd4_SetCursor() : These function will set the cursor position on the LCD screen by specifying 
 	        its row and column. By using these functions we can change the position of character and string displayed by the
 		following functions.
+	
 	4.	Lcd8_WriteChar() & Lcd4_WriteChar() : These functions will write a single character to the LCD screen and the cursor
 	        position will be incremented by one.
+	
 	5.	Lcd8_WriteString() & Lcd8_WriteString() : These function will write string or text to the LCD screen and the cursor
 	        positon will be incremented by length of the string plus one.
+	
 	6.	Lcd8_ShiftLeft() & Lcd4_ShiftLeft() : This function will shift data in the LCD display without changing data in the
 	        display RAM.
+	
 	7.	Lcd8_ShiftRight() & Lcd8_ShiftRight() : This function will shift data in the LCD display without changing data in 
 	        the display RAM.
+	
 	8.	For Pin change:
 		•	Change Lcd4_Port(data) and Lcd8_Port(data) to PORTD = data
 		•	Change pinChange(EN,1) to  PORTC |= (1<<PC7)
 		•	Change pinChange(EN,0) to PORTC &= ~(1<<PC7)
 		•	Change pinChange(RS,1) to PORTB |= (1<<PB6)
 		•	Change pinChange(RS,0) to PORTC &= ~(1<<PC6)
+
 EXAMPLE CODE:
 // Defining pins for LCD
 #define D4 eS_PORTD4
