@@ -101,11 +101,11 @@ while(1)
   }
 }
 }
-attachinterrupt LIBRARY:
 
+attachinterrupt LIBRARY:
 FUNCTIONS:
-1.void attachInterrupt ():
-External interrupt enabling function
+
+1.void attachInterrupt (): External interrupt enabling function
 SYNTAX:
 void attachInterrupt (digitalpintoInterrupt, *ISR (), mode)
 PARAMETERS:
@@ -121,6 +121,7 @@ PARAMETERS:
       •	RISING=2: interrupt enables on rising edge 
       •	FALLING=3: interrupt enables on falling edge 
       •	CHANGE=4: interrupt enables on any change of the edge
+      
 Ex:
 #include<avr/io.h>
 #include<attachInterrupt.h>
