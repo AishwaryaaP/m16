@@ -103,6 +103,7 @@ while(1)
 }
 
 attachinterrupt LIBRARY:
+
 FUNCTIONS:
 
 1.void attachInterrupt (): External interrupt enabling function
@@ -113,6 +114,7 @@ PARAMETERS:
      • 0 for INT0
      • 1 for INT1
      • 2 for INT2
+     
 • *ISR ():  This function is called if the external interrupt occurs.
       •	No parameter
       •	Returns nothing
