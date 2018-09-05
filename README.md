@@ -101,3 +101,42 @@ while(1)
   }
 }
 }
+attachinterrupt LIBRARY:
+
+FUNCTIONS:
+1.void attachInterrupt ():
+External interrupt enabling function
+SYNTAX:
+void attachInterrupt (digitalpintoInterrupt, *ISR (), mode)
+PARAMETERS:
+• digitalpintoInterrupt : The external interrupt request enable pin available are INT0, INT1, INT2. It takes an integer value.
+     • 0 for INT0
+     • 1 for INT1
+     • 2 for INT2
+• *ISR ():  This function is called if the external interrupt occurs.
+      •	No parameter
+      •	Returns nothing
+
+• mode: The mode at which the interrupt is enabled. Predefined constants are used for the different modes:   
+      •	RISING=2: interrupt enables on rising edge 
+      •	FALLING=3: interrupt enables on falling edge 
+      •	CHANGE=4: interrupt enables on any change of the edge
+Ex:
+#include<avr/io.h>
+#include<attachInterrupt.h>
+#include<avr/interrupt.h>
+void fun(void)
+{
+        while (PIND&&(1<<PD2)){    // while PD2(INT0) is HIGH
+        PORTB|=(1<<PB7);}
+        PORTB|=(1<<PB6);   // glowing a led  
+}
+Int main() 
+{       DDRB=0XFF; // setting leds as output
+	DDRD= 0X00; 
+	PORTB|=0X00;
+	PORTD|=0XFF;// pull-up the interrupts
+	attachInterrupt (0, *fun, 2); // INT0  is enabled on a RISING edge and fun() is called
+}
+while(1) {             
+}
