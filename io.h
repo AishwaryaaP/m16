@@ -117,8 +117,10 @@ float millis()//float and not int.
 	mIlli=x*0.16+0.00000625*TCNT0;		//"x not declared"
         return mIlli;
 }
-
-void USART_Init( unsigned int uBrr)
+class serial
+{
+public:
+void start( unsigned int uBrr)
 {
 	/*Set baud rate */
 	UBRRH = (unsigned char)(uBrr>>8);
@@ -127,7 +129,7 @@ void USART_Init( unsigned int uBrr)
         UCSRB = (1<<RXEN)|(1<<TXEN);
 }
 /* Set frame format: 8data, 2stop bit */
-void USART_Transmit( unsigned char data )
+void send( unsigned char data )
 {
 	/* Wait for empty transmit buffer */
 	while ( !( UCSRA & (1<<UDRE)) )
@@ -136,7 +138,7 @@ void USART_Transmit( unsigned char data )
 	UDR = data;
 	_delay_ms(100);
 }
-unsigned char USART_Receive( void )
+unsigned char get( void )
 {
 	/* Wait for data to be received */
 	while ( !(UCSRA & (1<<RXC)) )
@@ -144,6 +146,24 @@ unsigned char USART_Receive( void )
 	/* Get and return received data from buffer */
 	return UDR;
 }
+unsigned char read( void ){		//PROBLEM: rx frame error in proteus
+	                                        // Wait for data to be received 
+		while(!(UCSRA) & (1<<RXC));           // wait while data is being received
+                return UDR;                             // return 8-bit data
+	}
+
+	void flush(void){
+		unsigned char dUmmy;
+		while ( UCSRA & (1<<RXC) ) dUmmy = UDR;
+	}
+
+	void end(void){
+		flush();
+		UCSRB&=0xe7;	//disabling RXEN & TXEN
+	}
+
+};
+
 
 void delay(unsigned long mIllisec)
 {
@@ -165,71 +185,26 @@ void delayMicroseconds(unsigned long mIcrosec)
 	return;
 }
 
-void initADC()
-{
-	ADMUX=(1<<REFS0);				//Aref=AVcc
-	ADCSRA=(1<<ADEN)|(1<<ADPS2)|(1<<ADPS1);		//ADC enabled, Prescaler 64
-}
+
+
+	//ADC enabled, Prescaler 64
+
 
 uint8_t analogRead(uint8_t cHannel)
-{
-  //prescalar set to default
+{ADMUX=(1<<REFS0);				//Aref=AVcc
+ADCSRA=(1<<ADEN)|(1<<ADPS2)|(1<<ADPS1);		
+  
   ADMUX=(1<<REFS0)|(0<<REFS1);
   ADCSRA|=(1<<ADEN);
-  ADMUX|=cHannel;//chose value from 0 to 7 to chose adc pin accordingly
+  ADMUX|=x;//chose value from 0 to 7 to chose adc pin accordingly
   ADCSRA|=(1<<ADEN);
   ADCSRA|=(1<<ADSC);
-  while(ADCSRA&(1<<ADSC));
-  return (ADC);
+ while(ADCSRA&(1<<ADSC));
+ return (ADC);
 }
 
-class Serial{
-	public:
-	void begin(unsigned int bAud)
-	{
-		int uBrr=((F_CPU)/(bAud*16)-1);
-		//Set baud rate
-		UBRRH=(unsigned char)(uBrr>>8);
-		UBRRL=(unsigned char)uBrr;
-		UCSRB = (1<<RXEN)|(1<<TXEN);            //enable receiver and transmitter
-		UCSRC = (1<<URSEL)|(1<<USBS)|(3<<UCSZ0);
-	}
 
-	void write( unsigned char dAta ){		//working fine
-	/* Wait for empty transmit buffer */
-	/* Wait for empty transmit buffer */
-	while ( !( UCSRA & (1<<UDRE)) )
-	;
-	/* Put data into buffer, sends the data */
-	UDR = 0b00000011;
-	}
-
-	/*uint8_t available(void){	//working fine
-		 if((UCSRA & (1<<RXC)))
-			return 1;
-
-		else
-			return 0;
-	}*/
-
-	unsigned char read( void ){		//PROBLEM: rx frame error in proteus
-	                                        // Wait for data to be received 
-		while(!(UCSRA) & (1<<RXC));           // wait while data is being received
-                return UDR;                             // return 8-bit data
-	}
-
-	void flush(void){
-		unsigned char dUmmy;
-		while ( UCSRA & (1<<RXC) ) dUmmy = UDR;
-	}
-
-	void end(void){
-		flush();
-		UCSRB&=0xe7;	//disabling RXEN & TXEN
-	}
-
-};
-
+	
 void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:LOW=0,HIGH1,RISING=2,FALLING=3
 {
 	sei();
