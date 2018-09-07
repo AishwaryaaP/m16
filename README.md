@@ -8,7 +8,7 @@ Index:
 2]pulseIn()
 3]attachinterrupt()
 4]LCD
-5]
+5]analogrRead()
 6]
 7]
 8]
@@ -292,3 +292,46 @@ int main(void)
 		Lcd4_Clear();
     }
 }
+5.)analogread()
+this function acts as a comparision between between supply applied to analog pins and to the supply offered at vcc .for multiple adc pins to be used we can use this function for more than one time returining data type of 16 bit .which means the value will be of 1023 at max value.and 0 as the lowest and its value is mapped to voltage value which is supplied at vcc supply to take an example suppose if vcc supply is given of 5v which means that when analog value supplied to pin respective from 0 to 7 .one at time of declaration.5v will be maximum i.e 1023 and if suppose a is applied of 2.5 v which means that return value will be of 512 or 511 .... warining the value ranges from 0 to 1024.
+ex
+uint16_t analogRead(uint8_t cHannel)
+{ADMUX=(1<<REFS0);				//Aref=AVcc
+ADCSRA=(1<<ADEN)|(1<<ADPS2)|(1<<ADPS1);		
+  
+  ADMUX=(1<<REFS0)|(0<<REFS1);
+  ADCSRA|=(1<<ADEN);
+  ADMUX|=cHannel;//chose value from 0 to 7 to chose adc pin accordingly
+  ADCSRA|=(1<<ADEN);
+  ADCSRA|=(1<<ADSC);
+ while(ADCSRA&(1<<ADSC));
+ return (ADC);
+ cHannel++;
+ 
+}
+
+int main(void)
+{int x; 
+	int y;
+	DDRB=0b1111111;
+	
+    while(1)
+    {x=analogRead(0);
+		if (x<514)
+		{
+			PORTB=0b11100000;
+        //TODO:: Please write your application code 
+    }
+	y=analogRead(1);
+	if(y==1023)
+	{
+		PORTB|=1;	
+		}
+	}	
+}
+.. thats it ..
+6)serial library/UART
+serial library/UART is used for serial communication in which serial is a class in which it start function ubrr value should be put.which will initialize serail communication at give baud rate. then serial send as the name suggest it transfers data upto 8 bits so preferably a character is send.moving on we have serial.get which is used to recieve data.into some variable again preferably of 8 bit. and flush is used to empty data buffer.serial.end is used to end serial communication .
+7)millis()
+this function returns value of miilisecond occured until the program has started with float data tye
+.
