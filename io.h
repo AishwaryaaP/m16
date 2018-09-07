@@ -48,8 +48,7 @@
 
 void delay(unsigned long);		//simpler form of delay function in avr
 void analogWrite(uint8_t, uint8_t);		//PWM function using TIMER 0   ***NOTE:Timer 0 cannot be used if this function is used in the code***
-void initADC();
-uint8_t analogRead(uint8_t);
+uint16_t analogRead(uint8_t);
 void attachInterrupt(int,void *,int);
 void softwareInterrupt(void *);
 double map(double,double,double,double,double);
@@ -190,13 +189,13 @@ void delayMicroseconds(unsigned long mIcrosec)
 	//ADC enabled, Prescaler 64
 
 
-uint8_t analogRead(uint8_t cHannel)
+uint16_t analogRead(uint8_t cHannel)
 {ADMUX=(1<<REFS0);				//Aref=AVcc
 ADCSRA=(1<<ADEN)|(1<<ADPS2)|(1<<ADPS1);		
   
   ADMUX=(1<<REFS0)|(0<<REFS1);
   ADCSRA|=(1<<ADEN);
-  ADMUX|=x;//chose value from 0 to 7 to chose adc pin accordingly
+  ADMUX|=cHannel;//chose value from 0 to 7 to chose adc pin accordingly
   ADCSRA|=(1<<ADEN);
   ADCSRA|=(1<<ADSC);
  while(ADCSRA&(1<<ADSC));
