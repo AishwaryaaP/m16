@@ -66,7 +66,7 @@ const uint8_t A=1,B=2,C=3,D=4,lowerNibble=8,higherNibble=9,ALL=10,D4=4,D5=5;
 //variables for user interface
 /***VARIABLES lowerNibble, higherNibble, ALL ARE FOR SETTING A SET OF BIT AT ONCE***/
 void (*cAllisr)(void);		//function pointer used in ISR()
-void (*uSerfun) (void);         //function pointer used inISR() of softwareInterrupt
+void (*uSerfun) (void);        //function pointer used inISR() of softwareInterrupt
 
 double microsecondsToInches(unsigned long mIcroseconds) {
   // According to Parallax's datasheet for the PING))), there are 73.746
@@ -275,17 +275,17 @@ ISR(INT2_vect)
 	cAllisr();
 }
 
-void softwareInterrupt(void *iSrfun(void))
+void softwareInterrupt(void *isrfun(void))
 {
 	sei();
-	uSerfun = iSrfun;
-        TCCR0=(1<<WGM01)|(1<<WGM00)|(1<<CS00);  //fast pwm and prescalar is 1 
-	TIMSK=1<<TOIE0;                         //overflow interrupt flag is set
+	uSerfun = isrfun;
+        TCCR0=(1<<WGM01)|(1<<WGM00)|(1<<CS00); //fast pwm and prescalar is 1 
+	TIMSK=1<<TOIE0;//overflow interrupt flag is set
 }
 
 ISR(TIMER0_OVF_vect)
 {
-        uSerfun();
+		uSerfun();
 }
 
 class EEPROM{
