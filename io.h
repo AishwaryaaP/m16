@@ -34,7 +34,6 @@
 //                 ------
 
 /*************************************/
-
 #ifndef F_CPU
 #define F_CPU 16000000UL
 #endif
@@ -111,9 +110,9 @@ double pulseIn(volatile uint8_t pInno, uint8_t vAlue)
   return wIdth;
 }
 float millis()//float and not int.
-{       
+{       int x;
 	float mIlli;
-	mIlli=x*0.16+0.00000625*TCNT0;		//"x not declared"
+	mIlli=x*0.16+0.00000625*TCNT0;
         return mIlli;
 }
 class serial
@@ -145,12 +144,6 @@ unsigned char get( void )
 	/* Get and return received data from buffer */
 	return UDR;
 }
-unsigned char read( void ){		//PROBLEM: rx frame error in proteus
-	                                        // Wait for data to be received 
-		while(!(UCSRA) & (1<<RXC));           // wait while data is being received
-                return UDR;                             // return 8-bit data
-	}
-
 	void flush(void){
 		unsigned char dUmmy;
 		while ( UCSRA & (1<<RXC) ) dUmmy = UDR;
@@ -352,15 +345,5 @@ void analogWrite(int pIn,int dUtycycle)
   	 	OCR1B=dUtycycle;
   	}
 }
-EEPROM EEPROM;
-Serial Serial;
 
 
-int main() 
-{
-	setup();
-	while (1) 
-	{
-		loop();
-	}
-}
