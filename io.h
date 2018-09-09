@@ -336,14 +336,13 @@ void analogWrite(int pIn,int dUtycycle)
 	TCNT1=0;
 	
 	
-	if(pin==1)
+	if(pIn==1)
   	{
     		OCR1A=dUtycycle;
   	}
-  	else if(pin==2)
+  	else if(pIn==2)
   	{
   	 	OCR1B=dUtycycle;
   	}
 }
-
 
