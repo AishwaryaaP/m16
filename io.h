@@ -38,7 +38,7 @@
 #define F_CPU 16000000UL
 #endif
 #include <avr/io.h>
-
+#include <util/delay.h>
 #include <avr/interrupt.h>
 #include <avr/eeprom.h>
 #include <avr/pgmspace.h>
@@ -268,7 +268,7 @@ ISR(INT2_vect)
 	cAllisr();
 }
 
-void softwareInterrupt(void *isrfun(void))
+void softwareInterrupt(void (*isrfun)(void))
 {
 	sei();
 	uSerfun = isrfun;
