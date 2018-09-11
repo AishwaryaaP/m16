@@ -1,12 +1,11 @@
 /******************************************************
- |			 #########   #########	 #########
- |					 #       #       #   #
- | 					 #       #       #   #
- |					 #       #########	 ######
- |					 #       #  #        #
- |					 #       #     #     #
- |				 	 #       #       #   #
- | 			Created: 20-Aug-17 12:42:33 AM
+ |		#########   #########	#########	|
+ |		    #       #       #   #		|
+ | 		    #       #       #   #		|
+ |		    #       #########	######		|
+ |		    #       #  #        #		|
+ |		    #       #     #     #		|
+ |		    #       #       #   #		|
  *******************************************************/
 // ATMEL ATMEGA16
 //
@@ -115,35 +114,32 @@ float millis()//float and not int.
 	mIlli=x*0.16+0.00000625*TCNT0;
         return mIlli;
 }
-class serial
+class Serial
 {
-public:
-void start( unsigned int uBrr)
-{
-	/*Set baud rate */
-	UBRRH = (unsigned char)(uBrr>>8);
-	UBRRL = (unsigned char)uBrr;
-	/*Enable receiver and transmitter */
-        UCSRB = (1<<RXEN)|(1<<TXEN);
-}
-/* Set frame format: 8data, 2stop bit */
-void send( unsigned char data )
-{
-	/* Wait for empty transmit buffer */
-	while ( !( UCSRA & (1<<UDRE)) )
-	;
-	/* Put data into buffer, sends the data */
-	UDR = data;
-	_delay_ms(100);
-}
-unsigned char get( void )
-{
-	/* Wait for data to be received */
-	while ( !(UCSRA & (1<<RXC)) )
-	;
-	/* Get and return received data from buffer */
-	return UDR;
-}
+	public:
+	void start( unsigned int uBrr){
+		/*Set baud rate */
+		UBRRH = (unsigned char)(uBrr>>8);
+		UBRRL = (unsigned char)uBrr;
+		/*Enable receiver and transmitter */
+		UCSRB = (1<<RXEN)|(1<<TXEN);
+	}
+	/* Set frame format: 8data, 2stop bit */
+	void send( unsigned char data ){
+		/* Wait for empty transmit buffer */
+		while ( !( UCSRA & (1<<UDRE)) )
+		;
+		/* Put data into buffer, sends the data */
+		UDR = data;
+		_delay_ms(100);
+	}
+	unsigned char get( void ){
+		/* Wait for data to be received */
+		while ( !(UCSRA & (1<<RXC)) )
+		;
+		/* Get and return received data from buffer */
+		return UDR;
+	}
 	void flush(void){
 		unsigned char dUmmy;
 		while ( UCSRA & (1<<RXC) ) dUmmy = UDR;
@@ -183,16 +179,17 @@ void delayMicroseconds(unsigned long mIcrosec)
 
 
 uint16_t analogRead(uint8_t cHannel)
-{ADMUX=(1<<REFS0);				//Aref=AVcc
-ADCSRA=(1<<ADEN)|(1<<ADPS2)|(1<<ADPS1);		
-  
-  ADMUX=(1<<REFS0)|(0<<REFS1);
-  ADCSRA|=(1<<ADEN);
-  ADMUX|=cHannel;//chose value from 0 to 7 to chose adc pin accordingly
-  ADCSRA|=(1<<ADEN);
-  ADCSRA|=(1<<ADSC);
- while(ADCSRA&(1<<ADSC));
- return (ADC);
+{	
+	ADMUX=(1<<REFS0);				//Aref=AVcc
+	ADCSRA=(1<<ADEN)|(1<<ADPS2)|(1<<ADPS1);		  
+  	ADMUX=(1<<REFS0)|(0<<REFS1);
+	ADCSRA|=(1<<ADEN);
+	ADMUX|=cHannel;//chose value from 0 to 7 to chose adc pin accordingly
+	ADCSRA|=(1<<ADEN);
+	ADCSRA|=(1<<ADSC);
+ 	
+	while(ADCSRA&(1<<ADSC));
+ 	return (ADC);
 }
 
 
