@@ -7,9 +7,9 @@ Index:
 1]analogWrite()
 2]pulseIn()
 3]attachinterrupt()
-4]LCD
-5]analogrRead()
-6]
+4]softwareInterrupt
+5]LCD
+6]analogrRead()
 7]
 8]
 9]
@@ -147,7 +147,7 @@ Int main()
 while(1) {             
 }
 
-softwareinterrupt LIBRARY:
+4]softwareinterrupt LIBRARY:
 
 FUNCTIONS:
 1.void softwareInterrupt(): It enables internal interrupt.
@@ -178,7 +178,7 @@ int main()
         }
 }
 
-4]LCD:
+5]LCD:
 
 FUNCTIONS:
 	1.	Lcd8_Init () & Lcd4_Init (): These functions will initialize the 16×2 LCD module connected to the microcontroller
@@ -292,7 +292,7 @@ int main(void)
 		Lcd4_Clear();
     }
 }
-5.)analogread()
+6]analogread()
 this function acts as a comparision between between supply applied to analog pins and to the supply offered at vcc .for multiple adc pins to be used we can use this function for more than one time returining data type of 16 bit .which means the value will be of 1023 at max value.and 0 as the lowest and its value is mapped to voltage value which is supplied at vcc supply to take an example suppose if vcc supply is given of 5v which means that when analog value supplied to pin respective from 0 to 7 .one at time of declaration.5v will be maximum i.e 1023 and if suppose a is applied of 2.5 v which means that return value will be of 512 or 511 .... warining the value ranges from 0 to 1024.
 ex
 uint16_t analogRead(uint8_t cHannel)
@@ -330,8 +330,8 @@ int main(void)
 	}	
 }
 .. thats it ..
-6)serial library/UART
+7]serial library/UART
 serial library/UART is used for serial communication in which serial is a class in which it start function ubrr value should be put.which will initialize serail communication at give baud rate. then serial send as the name suggest it transfers data upto 8 bits so preferably a character is send.moving on we have serial.get which is used to recieve data.into some variable again preferably of 8 bit. and flush is used to empty data buffer.serial.end is used to end serial communication .
-7)millis()
+8]millis()
 this function returns value of miilisecond occured until the program has started with float data tye
 .
