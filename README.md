@@ -332,6 +332,18 @@ int main(void)
 .. thats it ..
 7]serial library/UART
 serial library/UART is used for serial communication in which serial is a class in which it start function ubrr value should be put.which will initialize serail communication at give baud rate. then serial send as the name suggest it transfers data upto 8 bits so preferably a character is send.moving on we have serial.get which is used to recieve data.into some variable again preferably of 8 bit. and flush is used to empty data buffer.serial.end is used to end serial communication .
+FOR EX:
+ #define FOSC 1000000           // Clock Speed
+ #define BAUD 4800              //baud rate
+ #define MYUBRR FOSC/16/BAUD-1  //formula for calculating ubrr rate
+    int main(void)
+     { serial j;                //serial type declaration
+	j.start(MYUBRR);        //ubrr rate input
+       while(1)
+       { j.send('w');           //data transmit 
+       }
+     }
+ similarly j.recieve is used for recieving end.    
 8]millis()
 this function returns value of miilisecond occured until the program has started with float data tye
 .
