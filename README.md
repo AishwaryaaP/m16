@@ -1,9 +1,8 @@
-This report contains libraries for AVR ATmega 16 & similar micro-controllers.
+**This report contains libraries for AVR ATmega 16 & similar micro-controllers.
 It contains function names same as that used in Arduino IDE
-
 io.h is the main library containing all the basic functions for ATmega16 microcontroller
 
-Index:
+# Index:
 1]analogWrite()
 2]pulseIn()
 3]attachinterrupt()
@@ -15,36 +14,36 @@ Index:
 9]
 10]
 
-1]analogWrite():
+## analogWrite():
 
-1.PARAMETERS:
+###### PARAMETERS:
 
-The parameters for this function are the pin and duty cycle.The pins for this function are PD4 and PD5 on Atmega .For simplicity,pin parameter has only two values.These are 1 and 2.If 1 is given as parameter for pin,the duty cycle will be given to PD4 and if it is 2 the duty cycle will be given to PD5.
+The parameters for this function are the pin and duty cycle.The value of duty cycle ranges between 0 to 255.The pins for this function are **PD4** and **PD5** on Atmega .For simplicity,pin parameter has only two values.These are 1 and 2.**If 1 is given as parameter for pin,the duty cycle will be given to PD4(OCRA) and if it is 2 the duty cycle will be given to PD5(OCRB).
 
-2.SYNTAX:
+###### SYNTAX:
 
-analogWrite(pin,duty cycle);
+**analogWrite(pin,duty cycle);
 
-2]pulseIn():
+## pulseIn():
 
-FUNCTIONS:
+######FUNCTIONS:
 
 1.  unsigned long pulseIn();
-  	This function reads a pulse (either HIGH or LOW) on a pin. For example, if value is HIGH, pulse_In() waits for the pin to go             from LOW to HIGH, starts timing, then waits for the pin to go LOW and stops timing. Returns the length of the pulse in            	   microseconds or gives up and returns 0 if no complete pulse was received within the timeout.
+  	This function reads a pulse (either HIGH or LOW) on a pin. For example,**if value is HIGH, pulse_In() waits for the pin to go             from LOW to HIGH, starts timing, then waits for the pin to go LOW and stops timing. Returns the length of the pulse in            	   microseconds or gives up and returns 0 if no complete pulse was received within the timeout.**
     SYNTAX:
       	unsigned long pulseIn (volatile uint8_t bitno, uint8_t stateMask);
     PARAMETERS:
     •	pInno: The pin number on which you want to read the pulse. (int)
     •	vAlue: type of pulse to read: either 1(for high) or 0(for low). (int)
 
-2.  unsigned long microsecondsToInches();
+ ## unsigned long microsecondsToInches();
     •	There are 73.746 microseconds per inch (i.e. sound travels at 1130 feet per second).This gives the distance travelled by the     	 ping, outbound and return, so we divide by 2 to get the distance of the obstacle.
     FORMULA:    
         mIcroseconds*0.00669/ 2
     SYNTAX:    
         unsigned long microsecondsToInches(unsigned long mIcroseconds1)
 
-3.  unsigned long microsecondsToCentimeters();
+##  unsigned long microsecondsToCentimeters();
     •	The speed of sound is 340 m/s or 29 microseconds per centimetre. The ping travels out and back, so to find the distance of the           object we take half of the distance travelled.
     FORMULA:
         mIcroseconds*0.17/ 2
@@ -178,9 +177,9 @@ int main()
         }
 }
 
-5]LCD:
+## LCD:
 
-FUNCTIONS:
+###### FUNCTIONS:
 	1.	Lcd8_Init () & Lcd4_Init (): These functions will initialize the 16×2 LCD module connected to the microcontroller
 	        pins defined by the following constants.
 	2.	Lcd8_Clear() & Lcd4_Clear() : Calling these functions will clear the 16×2 LCD display screen when interfaced with
@@ -292,8 +291,8 @@ int main(void)
 		Lcd4_Clear();
     }
 }
-6]analogread()
-this function acts as a comparision between between supply applied to analog pins and to the supply offered at vcc .for multiple adc pins to be used we can use this function for more than one time returining data type of 16 bit .which means the value will be of 1023 at max value.and 0 as the lowest and its value is mapped to voltage value which is supplied at vcc supply to take an example suppose if vcc supply is given of 5v which means that when analog value supplied to pin respective from 0 to 7 .one at time of declaration.5v will be maximum i.e 1023 and if suppose a is applied of 2.5 v which means that return value will be of 512 or 511 .... warining the value ranges from 0 to 1024.
+## analogread()
+this function acts as a comparision between between supply applied to analog pins and to the supply offered at vcc .for multiple adc pins to be used we can use this function for more than one time returining data type of 16 bit .**which means the value will be of 1023 at max value.and 0 as the lowest and its value is mapped to voltage value which is supplied at vcc supply to take an example suppose if vcc supply is given of 5v which means that when analog value supplied to pin respective from 0 to 7 .one at time of declaration.5v will be maximum i.e 1023 and if suppose a is applied of 2.5 v which means that return value will be of 512 or 511 .... warining the value ranges from 0 to 1024.**
 ex
 uint16_t analogRead(uint8_t cHannel)
 {ADMUX=(1<<REFS0);				//Aref=AVcc
@@ -330,8 +329,8 @@ int main(void)
 	}	
 }
 .. thats it ..
-7]serial library/UART
-serial library/UART is used for serial communication in which serial is a class in which it start function ubrr value should be put.which will initialize serail communication at give baud rate. then serial send as the name suggest it transfers data upto 8 bits so preferably a character is send.moving on we have serial.get which is used to recieve data.into some variable again preferably of 8 bit. and flush is used to empty data buffer.serial.end is used to end serial communication .
+## serial library/UART
+serial library/UART is used for serial communication in which serial is a class in which it start function ubrr value should be put.which will initialize serail communication at give baud rate. then **serial send** as the name suggest it transfers data upto **8 bits** so preferably a character is send.moving on we have **serial.get** which is used to receive data.into some variable again preferably of **8 bit**. and flush is used to empty data buffer.**serial.end** is used to end serial communication .
 FOR EX:
  #define FOSC 1000000           // Clock Speed
  #define BAUD 4800              //baud rate
@@ -344,6 +343,6 @@ FOR EX:
        }
      }
  similarly j.recieve is used for recieving end.    
-8]millis()
-this function returns value of miilisecond occured until the program has started with float data tye
+## millis()
+this function **returns value of miilisecond occured until the program has started with float data type.
 .
