@@ -48,11 +48,10 @@ void pinMode(uint8_t , uint8_t );
 static void turnOffPWM(uint8_t );
 void digitalWrite(uint8_t , uint8_t );
 int digitalRead(uint8_t );
-
 void delay(unsigned long);		//simpler form of delay function in avr
 void analogWrite(uint8_t, uint8_t);		//PWM function using TIMER 0   ***NOTE:Timer 0 cannot be used if this function is used in the code***
 uint16_t analogRead(uint8_t);
-void attachInterrupt(int,void *,int);
+void attachInterrupt(int,void *,int);   
 void softwareInterrupt(void *);
 double map(double,double,double,double,double);
 double constrain(double,double,double);
@@ -70,10 +69,6 @@ const uint8_t A=1,B=2,C=3,D=4,lowerNibble=8,higherNibble=9,ALL=10,D4=4,D5=5;
 /***VARIABLES lowerNibble, higherNibble, ALL ARE FOR SETTING A SET OF BIT AT ONCE***/
 void (*cAllisr)(void);		//function pointer used in ISR()
 void (*uSerfun) (void);        //function pointer used inISR() of softwareInterrupt
-
-
-
-
 
 void pinMode(uint8_t pIn, uint8_t mOde)
 {
@@ -106,7 +101,6 @@ void pinMode(uint8_t pIn, uint8_t mOde)
 		SREG = oldSREG;
 	}
 }
-
 
 static void turnOffPWM(uint8_t tImer)
 {
@@ -177,25 +171,20 @@ void digitalWrite(uint8_t pIn, uint8_t val)
 	uint8_t bit = digitalPinToBitMask(pIn);
 	uint8_t port = digitalPinToPort(pIn);
 	volatile uint8_t *out;
-
-	if (port == NOT_A_PIN) return;
-
+        if (port == NOT_A_PIN) return;
 	// If the pin that support PWM output, we need to turn it off
 	// before doing a digital write.
 	if (tImer != NOT_ON_TIMER) turnOffPWM(tImer);
-
-	out = portOutputRegister(port);
-
+        out = portOutputRegister(port);
 	uint8_t oldSREG = SREG;
 	cli();
-
 	if (val == LOW) {
-		*out &= ~bit;
-	} else {
-		*out |= bit;
+	 *out &= ~bit;
 	}
-
-	SREG = oldSREG;
+	else {
+	 *out |= bit;
+	}
+        SREG = oldSREG;
 }
 
 int digitalRead(uint8_t pIn)
@@ -230,7 +219,7 @@ PD,//(INT0)
 PD,//(INT1)
 PD,//(OC1B)
 PD,//(OC1A)
-PD,	//(ICP)
+PD,//(ICP)
 PD, //(OC2)
 PC,//(SCL)
 PC, //(SDA)
@@ -240,7 +229,6 @@ PC, //(TDO)
 PC, //(TDI)
 PC, //(TOSC1)
 PC,// (TOSC2)
-
 };
 
 const uint8_t PROGMEM digital_pin_to_bit_mask_PGM[] = {
@@ -269,8 +257,6 @@ _BV(4), //(TDO)
 _BV(5), //(TDI)
 _BV(6), //(TOSC1)
 _BV(7),// (TOSC2)
-
-
 };
 
 double microsecondsToInches(unsigned long mIcroseconds) {
@@ -351,15 +337,11 @@ class Serial
 		unsigned char dUmmy;
 		while ( UCSRA & (1<<RXC) ) dUmmy = UDR;
 	}
-
 	void end(void){
 		flush();
 		UCSRB&=0xe7;	//disabling RXEN & TXEN
 	}
-
 };
-
-
 void delay(unsigned long mIllisec)
 {
 	int i;
@@ -379,12 +361,7 @@ void delayMicroseconds(unsigned long mIcrosec)
 	}
 	return;
 }
-
-
-
-	//ADC enabled, Prescaler 64
-
-
+//ADC enabled, Prescaler 64
 uint16_t analogRead(uint8_t cHannel)
 {	
 	ADMUX=(1<<REFS0);				//Aref=AVcc
@@ -398,57 +375,54 @@ uint16_t analogRead(uint8_t cHannel)
 	while(ADCSRA&(1<<ADSC));
  	return (ADC);
 }
-
-
-	
 void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:LOW=0,HIGH1,RISING=2,FALLING=3
 {
 	sei();
-	cAllisr=iSrfunc;
+	cAllisr=iSrfunc; // the function called in ISR is same as the userdefined function
         switch(iNtpin)	  //enabling interrupt pin
 	{
 		case 0:
-		GICR= 1<<INT0;
+		GICR= 1<<INT0; // enabling INT0
 		switch(cOmpare)
 		{
-			case 2: 
+			case 2: // if rising edge
 		        MCUCR|=(1<<ISC00)|(1<<ISC01);
 			break;
-			case 3: 
+			case 3: // if falling edge
 			MCUCR|=(0<<ISC00)|(1<<ISC01);
 			break;
-			case 4:
+			case 4: // if any change HIGH to LOW or LOW to HIGH
 			MCUCR|=(1<<ISC00)|(0<<ISC01);
 			break;
 			default:
 			MCUCR|=(0<<ISC00)|(0<<ISC01);
 		}
 		break;	
-		case 1:
+		case 1: //enabling INT1
 		GICR|=1<<INT1;
 		switch(cOmpare)
 		{
-			case 2:
+			case 2: //If RISING
 			MCUCR|=(1<<ISC10)|(1<<ISC11);
 			break;
-			case 3:
+			case 3: // if FALLING
 			MCUCR|=(0<<ISC10)|(1<<ISC11);
 			break;
-			case 4:
+			case 4: // if CHANGE
 			MCUCR|=(1<<ISC10)|(0<<ISC11);
 			break;
 			default:
 			MCUCR|=(0<<ISC00)|(0<<ISC01);
 	         }
 		break;
-		case 2:
+		case 2: //enabling INT2
 		GICR|=1<<INT2;
 		switch(cOmpare)
 		{
-			case 2:
+			case 2: // if RISING
 			MCUCSR|=(1<<ISC2);
 			break;
-			case 3:
+			case 3: //if FALLING
 			MCUCSR|=(0<<ISC2);
 			break;
 			default:
@@ -461,28 +435,27 @@ void attachInterrupt(int iNtpin, void (*iSrfunc)(void), int cOmpare)		//cOmpare:
 }
 ISR(INT0_vect)
 {
-	cAllisr();
+	cAllisr(); // user defined function is called
 }
 ISR(INT1_vect)
 {
-	cAllisr();
+	cAllisr(); // user defined function is called
 }
 ISR(INT2_vect)
 {
-	cAllisr();
+	cAllisr(); // user defined function is called
 }
 
 void softwareInterrupt(void (*isrfun)(void))
 {
-	sei();
+	sei(); 
 	uSerfun = isrfun;
         TCCR0=(1<<WGM01)|(1<<WGM00)|(1<<CS00); //fast pwm and prescalar is 1 
 	TIMSK=1<<TOIE0;//overflow interrupt flag is set
 }
-
 ISR(TIMER0_OVF_vect)
 {
-		uSerfun();
+		uSerfun(); // userdefined function is called
 }
 
 class EEPROM{
@@ -490,12 +463,9 @@ class EEPROM{
 	{
 		/*wait until previous process is completed*/
 		while(EECR & (1<<EEWE))
-
-		EEAR=aDdress;	//address of eeprom
+                EEAR=aDdress;	//address of eeprom
 		EEDR=dAta;		//data of eeprom
-
-		EECR |= (1<<EEMWE);
-
+                EECR |= (1<<EEMWE);
 		EECR |= (1<<EEWE);	//start eeprom
 	}
 
@@ -510,7 +480,6 @@ class EEPROM{
 		/* Return data from data register */
 		return EEDR;
 	}
-
 };
 
 double map(double vAlue, double fromLow, double fromHigh, double toLow, double toHigh)
@@ -520,26 +489,15 @@ double map(double vAlue, double fromLow, double fromHigh, double toLow, double t
 
 double constrain(double nUm,double uPper,double lOwer)
 {
-	if(nUm<uPper){
-		return uPper;}
-	else if(nUm>lOwer){
-		return lOwer;}
-	else 
-	return nUm;	
+	if(nUm<uPper){return uPper;}
+	else if(nUm>lOwer){return lOwer;}
+	else return nUm;	
 }
-
-
 void analogWrite(int pIn,int dUtycycle)
-{
-	
-	
-	//initialize TCCR0 as per requirement, say as follows
+{	//initialize TCCR0 as per requirement, say as follows
 	TCCR1A |= (1<<WGM10)|(1<<COM1A1)|(1<<COM1B1);//initializing timer1
 	TCCR1B |=(1<<CS10);
-	
 	TCNT1=0;
-	
-	
 	if(pIn==1)
   	{
     		OCR1A=dUtycycle;
