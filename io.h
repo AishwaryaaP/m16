@@ -310,7 +310,7 @@ float millis()//float and not int.
 class Serial
 {
 	public:
-	void start( unsigned int uBrr){
+	void begin( unsigned int uBrr){
 		/*Set baud rate */
 		UBRRH = (unsigned char)(uBrr>>8);
 		UBRRL = (unsigned char)uBrr;
@@ -318,7 +318,7 @@ class Serial
 		UCSRB = (1<<RXEN)|(1<<TXEN);
 	}
 	/* Set frame format: 8data, 2stop bit */
-	void send( unsigned char data ){
+	void write( unsigned char data ){
 		/* Wait for empty transmit buffer */
 		while ( !( UCSRA & (1<<UDRE)) )
 		;
@@ -326,7 +326,7 @@ class Serial
 		UDR = data;
 		_delay_ms(100);
 	}
-	unsigned char get( void ){
+	unsigned char read( void ){
 		/* Wait for data to be received */
 		while ( !(UCSRA & (1<<RXC)) )
 		;
