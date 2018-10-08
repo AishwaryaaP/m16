@@ -42,9 +42,3 @@ void pinMode(unsigned int i,int tipe)
 	     }  
 }
 		 }
- int main()
- {
-	 pinMode(11,0);
-	 pinMode(12,1);
-	 	 pinMode(10,1);
- }
