@@ -1,9 +1,4 @@
-/*
- * AVRGCC34.cpp
- *
- * Created: 02-10-2018 17:22:00
- *  Author: HP
- */ 
+
 
 #include <avr/io.h>
 
