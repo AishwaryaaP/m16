@@ -7,28 +7,44 @@
 
 #include <avr/io.h>
 
+int l;
+int c[24]={1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8,1,2,3,4,5,6,7,8};
 
-
-int x[24]={1,2,4,8,16,32,64,128,1,2,4,8,16,32,64,128,1,2,4,8,16,32,64,128};
 char d[24]={'b','b','b','b','b','b','b','b','c','c','c','c','c','c','c','c','d','d','d','d','d','d','d','d'};
-void pinMode(unsigned int i,short unsigned int tipe)
+void pinMode(unsigned int i,int tipe)
 {
-  
-  switch(d[i])
-  {
-	case'b':
-	         DDRB|=x[i];
-			 break;
-	case'c':
-	          DDRC|=x[i];
-			  break;
-	case'd':
-	         DDRD|=x[i];
-			 break;		  		 		 			 
-	  }
+  if(tipe==0)
+        { switch(d[i])
+         {
+	 
+	          case'b':
+	                  DDRB|=(0<<c[i]);
+			           break;
+	          case'c':
+	                 DDRC|=(0<<c[i]);
+			          break;
+	          case'd':
+	                 DDRD|=(0<<c[i]);
+			          break;	  		 		 			 
+	     }  }
+	else{          switch(d[i])
+         {
+	 
+	          case'b':
+	                  DDRB|=(1<<c[i]);
+			           break;
+	          case'c':
+	                 DDRC|=(1<<c[i]);
+			          break;
+	          case'd':
+	                 DDRD|=(1<<c[i]);
+			          break;	  		 		 			 
+	     }  
 }
+		 }
  int main()
  {
 	 pinMode(11,0);
-	 pinMode(12,0);
+	 pinMode(12,1);
+	 	 pinMode(10,1);
  }
